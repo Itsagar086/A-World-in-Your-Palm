@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c1c2c">
+<meta name="description" content="A small explorer. Eight living regions. One handmade planet you can walk all the way around — with a real day and night.">
+<title>Tiny World — A Handmade Planet</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%234e9159'/%3E%3Cpath d='M9 22 Q24 11 26 30 T52 42' stroke='%23e7cf97' stroke-width='8' fill='none'/%3E%3Ccircle cx='46' cy='18' r='5' fill='%23f0d27a'/%3E%3C/svg%3E">
+<style>
+:root{
+  color-scheme:dark;
+  --ink:#e5ecda; --muted:#9faea8; --gold:#e5c784; --wisp:#8ff0d4;
+  --line:#dce3d31b; --glass:#10272bb8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
+body{
+  font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:radial-gradient(ellipse at 47% 38%,#173c42 0,#102c36 28%,#0c2030 60%,#091727 100%);
+  color:var(--ink);-webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button,canvas{touch-action:none}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:5px}
+button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+button[hidden],[hidden]{display:none!important}
+
+#world{display:block;width:100%;height:100%;outline:none;opacity:0;transition:opacity 1.2s;cursor:grab}
+#world.ready{opacity:1}
+#world.dragging{cursor:grabbing}
+.vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 40%,transparent 45%,#040e1b55);z-index:1}
+
+/* ---------- top bar ---------- */
+.topbar{position:fixed;inset:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:27px 33px;pointer-events:none;z-index:5}
+.topbar button{pointer-events:auto}
+.wordmark{display:flex;align-items:center;gap:11px}
+.wordmark>div{display:flex;flex-direction:column;gap:5px}
+.brand{font-size:12px;letter-spacing:.20em;font-weight:650}
+.edition{font-size:8px;letter-spacing:.21em;color:#a9bfb5}
+.planet-logo{width:29px;height:29px;position:relative;display:block;border:1px solid #b8caa55e;border-radius:50%;transform:rotate(-25deg)}
+.planet-logo:before{content:"";position:absolute;inset:3px 9px;border:1px solid #c8d4b0a3;border-radius:50%}
+.planet-logo:after{content:"";position:absolute;inset:9px -5px;border:1px solid #c8d4b0a3;border-radius:50%}
+.planet-logo i{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold);right:-3px;top:5px;box-shadow:0 0 8px #dfc17566}
+.tools{display:flex;gap:9px}
+.icon-button{display:grid;place-items:center;width:37px;height:37px;border:1px solid var(--line);border-radius:50%;background:#0b202960;backdrop-filter:blur(12px);color:#bacbbf;transition:background .2s,color .2s,transform .2s}
+.icon-button:hover{background:#294747a6;color:#f3edd6;transform:translateY(-1px)}
+.icon-button[aria-pressed=true]{color:var(--gold);border-color:#e5c78455}
+.sound-on{display:none}
+#sound-button[aria-pressed=true] .sound-on{display:block}
+#sound-button[aria-pressed=true] .sound-off{display:none}
+.time-button{width:auto;padding:0 11px;gap:6px;border-radius:19px;font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+#time-label{color:#cfe0d2}
+
+.journal-button{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:11px;min-height:39px;background:#10292e9e;backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:30px;padding:8px 16px;color:#dce2cc}
+.journal-button:hover{background:#294747a6}
+.journal-button svg{width:16px;height:16px;color:var(--gold)}
+#progress-number{font-variant-numeric:tabular-nums;font-size:12px;font-weight:550;white-space:nowrap}
+#progress-number>span{color:#8a9d97;font-size:11px}
+.journal-caption{font-size:10px;color:#aab9ab;letter-spacing:.015em}
+.wisp-pill{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--wisp);padding-left:11px;border-left:1px solid #ffffff14;font-variant-numeric:tabular-nums}
+.wisp-pill i{width:6px;height:6px;border-radius:50%;background:var(--wisp);box-shadow:0 0 9px #8ff0d4aa;display:inline-block}
+
+/* ---------- region caption ---------- */
+.region{position:fixed;left:34px;bottom:80px;z-index:3;pointer-events:none;max-width:300px;transition:opacity .3s,transform .3s}
+.eyebrow{font-size:8px;font-weight:600;letter-spacing:.24em;color:#b7c6b7}
+.region h1{font-family:Georgia,"Times New Roman",serif;font-size:32px;letter-spacing:-.025em;font-weight:400;margin:10px 0 9px;line-height:1.08;text-shadow:0 2px 10px #091c2699}
+.region p{font-size:11px;line-height:1.6;max-width:242px;color:#a9beb3;margin:0}
+
+/* ---------- interaction ---------- */
+.interaction-area{position:fixed;z-index:6;left:50%;transform:translateX(-50%);bottom:81px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.interact-button{display:flex;align-items:center;gap:13px;min-width:228px;padding:12px 13px;border:1px solid #ead29362;border-radius:15px;background:linear-gradient(135deg,#344336e8,#1d3531eb);box-shadow:0 8px 34px #010c1777,0 0 22px #e4c37909;backdrop-filter:blur(18px);text-align:left;transition:transform .15s,background .15s}
+.interact-button:hover{transform:translateY(-3px);background:linear-gradient(135deg,#46563de8,#284a3ceb)}
+.interact-button:active{transform:translateY(0) scale(.98)}
+.keycap{display:grid;place-items:center;width:33px;height:33px;flex:0 0 33px;border:1px solid #f4dda552;border-radius:8px;background:#e7c37c15;color:#f1d399;font-size:13px;font-weight:650}
+.action-copy{display:flex;flex-direction:column;gap:5px}
+.action-copy>span{font-size:7px;letter-spacing:.17em;color:#b8c5a7}
+.action-copy strong{font-weight:500;font-size:12px;white-space:nowrap}
+.interact-button>svg{margin-left:12px;width:16px;color:#dec78c}
+.walk-hint{display:flex;align-items:center;gap:8px;white-space:nowrap;color:#adc0b5;font-size:10px;letter-spacing:.02em;text-shadow:0 1px 7px #00171b}
+.tiny-spark{color:var(--gold);font-size:11px}
+.hint-divider{width:1px;height:11px;background:#b4c5aa45;margin:0 4px}
+
+/* ---------- compass ---------- */
+.compass{position:fixed;right:34px;bottom:96px;z-index:4;display:flex;align-items:center;gap:11px;pointer-events:none;transition:opacity .3s}
+.compass-dial{position:relative;width:52px;height:52px;border:1px solid #cfe0d229;border-radius:50%;background:#0e262caa;backdrop-filter:blur(10px);display:grid;place-items:center}
+.compass-dial:before{content:"";position:absolute;inset:7px;border:1px dashed #cfe0d21f;border-radius:50%}
+#compass-needle{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:17px solid var(--gold);transform-origin:50% 68%;filter:drop-shadow(0 0 6px #e5c78455);transition:transform .12s linear}
+.compass-copy{text-align:right;display:flex;flex-direction:column;gap:3px}
+.compass-copy small{font-size:7px;letter-spacing:.2em;color:#9db0a6}
+.compass-copy strong{font-size:11px;font-weight:500;color:#dfe8d4}
+#compass-distance{font-size:9px;color:var(--gold);font-variant-numeric:tabular-nums}
+
+/* ---------- footer / status ---------- */
+.control-strip{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);display:flex;align-items:center;gap:19px;color:#96ada7;font-size:9px;white-space:nowrap;z-index:4;transition:opacity .4s}
+.control-strip>span{display:flex;align-items:center;gap:4px}
+kbd{font-family:inherit;font-size:9px;font-weight:500;display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:18px;padding:0 4px;background:#c9d9b908;border:1px solid #b2c6b52e;border-bottom-color:#b2c6b54b;border-radius:4px;color:#c3d0bd;line-height:1}
+.control-strip>span>kbd:last-of-type{margin-right:3px}
+
+.journey{position:fixed;left:50%;top:83px;transform:translateX(-50%);z-index:5;display:flex;align-items:center;gap:9px;background:#0e2b2dda;padding:8px 10px 8px 13px;border:1px solid #becdb71a;border-radius:24px;color:#baccb8;font-size:10px;white-space:nowrap}
+.journey-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px #e5c78477;animation:breathe 2s infinite}
+.journey button{border:0;background:transparent;color:#baccb8;font-size:18px;line-height:1;padding:0 3px}
+
+.toast{position:fixed;left:50%;top:94px;transform:translate(-50%,-10px);z-index:8;text-align:center;max-width:min(430px,85vw);width:max-content;padding:13px 20px;border:1px solid #ddcc9344;border-radius:13px;background:#203c32ed;box-shadow:0 14px 40px #03101855;backdrop-filter:blur(14px);color:#e7e8cb;font-size:12px;line-height:1.7;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.toast.visible{opacity:1;transform:translate(-50%,0)}
+.toast strong{display:block;font-size:8px;font-weight:600;letter-spacing:.16em;color:#e3c887;margin-bottom:2px}
+
+/* ---------- loading ---------- */
+.loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;z-index:10;background:#0b1e2c;transition:opacity .7s;pointer-events:none}
+.loading p{font-family:Georgia,serif;font-size:22px;text-align:center;font-weight:400;margin:0}
+.loading p span{display:block;font-family:ui-sans-serif,sans-serif;font-size:10px;letter-spacing:.12em;color:#9fb4a8;margin-top:14px}
+.loading-orb{display:block;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#b0c780,#4f8d74);box-shadow:inset -9px -6px 0 #29625780,0 0 42px #97ba7030;animation:breathe 1.8s infinite}
+.loading.fade{opacity:0}
+
+/* ---------- panels ---------- */
+.panel{background:linear-gradient(155deg,#1c3638,#132b32);color:var(--ink);border:1px solid #bdc9a92b;border-radius:23px;padding:36px;width:min(460px,calc(100vw - 32px));box-shadow:0 35px 120px #010a1699;max-height:calc(100dvh - 60px);overflow:auto;scrollbar-width:thin;scrollbar-color:#4b675d transparent}
+.panel::backdrop{background:#06152180;backdrop-filter:blur(9px)}
+.panel h2{font-family:Georgia,serif;font-size:29px;line-height:1.1;font-weight:400;letter-spacing:-.025em;margin:13px 0 12px}
+.panel-intro{color:#aebfb2;font-size:11px;line-height:1.6;margin:0 0 23px}
+.close-panel{position:absolute;right:19px;top:14px;font-size:25px;color:#aabcad;border:0;background:transparent;padding:3px 7px;border-radius:50%}
+.journal-progress{height:3px;width:100%;background:#d3dec716;border-radius:5px;overflow:hidden;margin-bottom:16px}
+#journal-progress-fill{display:block;width:0%;height:100%;background:#d8c684;border-radius:5px;transition:width .5s}
+.journal-list{display:flex;flex-direction:column;gap:3px}
+.journal-entry{display:flex;align-items:center;gap:13px;text-align:left;border:0;background:transparent;padding:11px 9px;border-radius:10px;transition:background .2s}
+.journal-entry:hover{background:#cfdfc511}
+.entry-number{display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--entry-color);border-radius:50%;font-size:9px;color:var(--entry-color);opacity:.8}
+.journal-entry.completed .entry-number{background:var(--entry-color);color:#163831;opacity:1}
+.entry-copy{flex:1}
+.entry-copy strong{font-size:12px;font-weight:500;display:block;margin-bottom:4px}
+.entry-copy span{font-size:9px;color:#9eb1a6}
+.entry-arrow{font-size:18px;color:#a6b9a3}
+.journal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px;padding-top:19px;border-top:1px solid #ffffff10}
+.journal-stats div{display:flex;flex-direction:column;gap:5px}
+.journal-stats span{font-size:7px;letter-spacing:.19em;color:#93a99e}
+.journal-stats strong{font-size:14px;font-weight:500;color:#e8efd8;font-variant-numeric:tabular-nums}
+.journal-footnote{color:#8fa99c;font-size:10px;line-height:1.9;margin:20px 0 0;text-align:center}
+.help-grid{display:grid;grid-template-columns:118px 1fr;gap:15px 12px;font-size:11px}
+.help-grid>span:nth-child(odd){color:#a2b8a6}
+.help-grid kbd{height:22px;font-size:9px;padding:0 6px}
+.primary-button{width:100%;display:flex;align-items:center;justify-content:space-between;margin-top:25px;padding:14px 17px;background:#dac58d;color:#203730;border:0;border-radius:10px;font-size:12px;font-weight:600}
+.primary-button:hover{background:#eed9a1}
+
+/* ---------- photo mode ---------- */
+.photo-bar{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:9;display:none;align-items:center;gap:11px;padding:10px 13px;border:1px solid #e5c78440;border-radius:16px;background:#0d2229d8;backdrop-filter:blur(14px)}
+.photo-bar button{border:1px solid var(--line);background:#ffffff08;border-radius:10px;padding:9px 15px;font-size:11px;color:#e2ead6}
+.photo-bar button:hover{background:#ffffff14}
+.photo-bar .shutter{background:#dac58d;color:#1d332c;border-color:transparent;font-weight:600}
+body.photo-mode .topbar,body.photo-mode .region,body.photo-mode .interaction-area,
+body.photo-mode .control-strip,body.photo-mode .compass,body.photo-mode .journey,
+body.photo-mode .joystick,body.photo-mode .jump-button{opacity:0;pointer-events:none}
+body.photo-mode .photo-bar{display:flex}
+body.photo-mode .photo-frame{opacity:1}
+.photo-frame{position:fixed;inset:22px;border:1px solid #f2e4bd2e;border-radius:6px;pointer-events:none;z-index:2;opacity:0;transition:opacity .3s}
+.photo-frame:before,.photo-frame:after{content:"";position:absolute;background:#f2e4bd38}
+.photo-frame:before{left:50%;top:-1px;width:1px;height:14px}
+.photo-frame:after{left:50%;bottom:-1px;width:1px;height:14px}
+
+.joystick,.jump-button{display:none}
+.fallback{position:fixed;inset:0;z-index:20;background:#102331;display:grid;place-content:center;text-align:center;padding:32px;color:#e3dfca;font-size:17px;line-height:1.7}
+.fallback span{display:block;color:#a2b4a8;font-size:12px;margin-top:12px;max-width:340px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.is-follow .region{bottom:66px}
+.is-follow .control-strip{opacity:.65}
+.is-follow #walk-hint{display:none}
+.is-moving .region p{opacity:.7}
+@keyframes breathe{50%{transform:scale(.95);opacity:.75}}
+
+@media(max-width:1050px){
+  .compass{right:24px;bottom:88px}
+  .compass-copy{display:none}
+}
+@media(max-width:950px){
+  .region{max-width:220px;left:24px;bottom:95px}
+  .region h1{font-size:27px}
+  .region p{display:none}
+  .topbar{padding:23px 24px}
+  .interaction-area{bottom:76px}
+  .walk-hint{font-size:9px}
+  .control-strip{gap:13px}
+  .journal-caption{display:none}
+  .wisp-pill{padding-left:8px}
+}
+@media(max-width:650px){
+  .topbar{padding:max(19px,env(safe-area-inset-top)) 17px 13px;gap:8px}
+  .brand{font-size:10px;letter-spacing:.16em}
+  .edition{display:none}
+  .wordmark{gap:8px}
+  .planet-logo{width:24px;height:24px}
+  .planet-logo:before{inset:3px 8px}
+  .planet-logo:after{inset:8px -4px}
+  .journal-button{left:auto;right:139px;transform:none;padding:7px 10px;gap:7px;min-height:32px}
+  .journal-button svg{width:14px;height:14px}
+  .wisp-pill{display:none}
+  .tools{gap:6px}
+  .icon-button{width:34px;height:34px}
+  .icon-button svg{width:18px;height:18px}
+  .help-button,.time-button{display:none}
+  .region,.is-follow .region{left:20px;bottom:auto;top:88px;max-width:220px}
+  .eyebrow{font-size:7px;letter-spacing:.19em}
+  .region h1{font-size:25px;margin:8px 0}
+  .interaction-area{bottom:140px;width:calc(100% - 40px)}
+  .interact-button{min-width:220px;gap:11px;padding:11px 12px}
+  .action-copy strong{font-size:11px}
+  .compass{right:18px;bottom:150px}
+  .compass-dial{width:44px;height:44px}
+  .control-strip{bottom:29px;font-size:8px;gap:9px;flex-wrap:wrap;justify-content:center;width:calc(100% - 50px)}
+  .control-strip>span:nth-child(2),.control-strip>span:nth-child(3){display:none}
+  .walk-hint{white-space:normal;max-width:215px;line-height:1.8;text-align:center;justify-content:center;flex-wrap:wrap;gap:6px}
+  .walk-hint .hint-divider{display:none}
+  .journey{top:146px;font-size:9px}
+  .toast{top:140px;font-size:11px;padding:11px 16px}
+  .panel{padding:29px 24px;max-height:calc(100dvh - 40px)}
+  .panel h2{font-size:27px}
+  .journal-entry{padding:9px 6px}
+  .journal-footnote{font-size:9px}
+  .help-grid{grid-template-columns:100px 1fr;font-size:10px}
+}
+@media(pointer:coarse),(max-width:650px){
+  .joystick{display:block;position:fixed;z-index:7;left:max(27px,env(safe-area-inset-left));bottom:max(30px,env(safe-area-inset-bottom));width:89px;height:89px;border:1px solid #c9d8b82d;border-radius:50%;background:#102b323b;touch-action:none}
+  .joystick:before{content:"";position:absolute;inset:13px;border:1px solid #c9d8b816;border-radius:50%}
+  .joystick-cross:before,.joystick-cross:after{content:"";position:absolute;background:#cad8ba2b}
+  .joystick-cross:before{width:1px;height:65px;left:43px;top:11px}
+  .joystick-cross:after{height:1px;width:65px;top:43px;left:11px}
+  #joystick-knob{display:block;position:absolute;left:28px;top:28px;width:32px;height:32px;background:#c4d6b933;border:1px solid #d6dec258;border-radius:50%;box-shadow:0 4px 12px #001d2844;pointer-events:none}
+  .jump-button{display:grid;place-items:center;position:fixed;z-index:7;right:max(29px,env(safe-area-inset-right));bottom:max(42px,env(safe-area-inset-bottom));width:55px;height:55px;border:1px solid #d6dec244;border-radius:50%;background:#193a3c55;backdrop-filter:blur(10px);color:#d4dbc0}
+  .jump-button svg{width:22px;height:22px}
+  .control-strip{display:none}
+  .interact-key{font-size:0}
+  .interact-key:after{content:'✦';font-size:17px}
+  .interaction-area{bottom:138px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+  <canvas id="world" tabindex="0" role="application" aria-label="Tiny World, an interactive handmade planet" aria-describedby="controls-description"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="photo-frame" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="wordmark">
+      <span class="planet-logo" aria-hidden="true"><i></i></span>
+      <div><span class="brand">TINY WORLD</span><span class="edition">A HANDMADE PLANET</span></div>
+    </div>
+
+    <button id="journal-button" class="journal-button" aria-label="Open field journal" title="Field journal (J)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4.5h6a3 3 0 0 1 3 3V21a4 4 0 0 0-3-1.5H4zM20 4.5h-4a3 3 0 0 0-3 3M20 4.5v15h-4"/></svg>
+      <span id="progress-number">0 <span>/ 8</span></span>
+      <span class="journal-caption">small wonders</span>
+      <span class="wisp-pill"><i></i><span id="wisp-count">0 / 16</span></span>
+    </button>
+
+    <div class="tools">
+      <button id="time-button" class="icon-button time-button" aria-label="Time of day: Auto" title="Time of day (N)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></svg>
+        <span id="time-label">Auto</span>
+      </button>
+      <button id="view-button" class="icon-button" aria-label="Follow explorer" title="Follow explorer (M)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><ellipse cx="12" cy="12" rx="3.7" ry="8.5"/><path d="M4 9h16M4 15h16"/></svg>
+      </button>
+      <button id="photo-button" class="icon-button" aria-label="Photo mode" aria-pressed="false" title="Photo mode (P)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8.5h3.4l1.4-2.4h8.4l1.4 2.4H21v10H3z"/><circle cx="12" cy="13" r="3.3"/></svg>
+      </button>
+      <button id="sound-button" class="icon-button" aria-label="Enable sound" aria-pressed="false" title="Sound">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="sound-on" d="M16 8a6 6 0 0 1 0 8M18.5 5a10 10 0 0 1 0 14"/><path class="sound-off" d="m17 9 5 6m0-6-5 6"/></svg>
+      </button>
+      <button id="help-button" class="icon-button help-button" aria-label="Show controls" title="Controls">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.5 9a2.6 2.6 0 0 1 5 .4c0 2-2.5 2.1-2.5 4M12 16.5v.1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="loading" class="loading">
+    <span class="loading-orb" aria-hidden="true"></span>
+    <p>Growing a tiny world<span>One moment of wonder.</span></p>
+  </div>
+
+  <div id="region" class="region">
+    <span class="eyebrow" id="region-kind">FOREST · 01</span>
+    <h1 id="region-name">Mosswood</h1>
+    <p id="region-caption">Every long journey starts with one small step off the path.</p>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div id="journey" class="journey" hidden>
+    <span class="journey-dot"></span>
+    <span id="journey-label"></span>
+    <button id="cancel-journey" aria-label="Stop walking" title="Stop walking (Escape)">×</button>
+  </div>
+
+  <div id="compass" class="compass" hidden aria-hidden="true">
+    <div class="compass-copy">
+      <small>NEAREST WONDER</small>
+      <strong id="compass-name">Mosswood</strong>
+      <span id="compass-distance">0m</span>
+    </div>
+    <div class="compass-dial"><span id="compass-needle"></span></div>
+  </div>
+
+  <div class="interaction-area">
+    <button id="interact-button" class="interact-button" hidden>
+      <span class="keycap interact-key">E</span>
+      <span class="action-copy">
+        <span id="interaction-kind">A SMALL WONDER</span>
+        <strong id="interaction-label">Light the camp</strong>
+      </span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+    </button>
+    <div id="walk-hint" class="walk-hint">
+      <span class="tiny-spark">✦</span>
+      <span id="walk-hint-primary">Click anywhere to wander</span>
+      <span class="hint-divider"></span>
+      <span id="walk-hint-secondary">Drag to orbit · Scroll to zoom</span>
+    </div>
+  </div>
+
+  <footer id="control-strip" class="control-strip">
+    <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> walk</span>
+    <span><kbd>⇧</kbd> run</span>
+    <span><kbd>space</kbd> hop</span>
+    <span><kbd>E</kbd> interact</span>
+    <span><kbd>M</kbd> globe</span>
+    <span><kbd>N</kbd> time</span>
+    <span><kbd>P</kbd> photo</span>
+  </footer>
+
+  <div class="photo-bar">
+    <button id="capture-button" class="shutter">Take the picture</button>
+    <button id="exit-photo">Back to wandering</button>
+  </div>
+
+  <div id="joystick" class="joystick" aria-label="Movement joystick"><span class="joystick-cross"></span><span id="joystick-knob"></span></div>
+  <button id="jump-button" class="jump-button" aria-label="Jump"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 11 5-6 5 6M12 5v13M5 20h14"/></svg></button>
+
+  <div id="controls-description" class="sr-only">WASD or arrow keys to walk. Shift to run. Space to hop. E to interact with a nearby landmark. Click or tap the ground to walk there. Drag to rotate the camera. Scroll or pinch to zoom. M toggles globe and follow views. N changes the time of day. P enters photo mode. J opens your field journal. Home returns to Mosswood. Escape cancels your route. On touch screens, use the movement joystick and jump button.</div>
+  <output id="telemetry" class="sr-only" aria-hidden="true"></output>
+
+  <div id="fallback" class="fallback" hidden><p>This tiny world needs WebGL 2.<span>Please use a current browser with graphics acceleration, then reload.</span></p></div>
+
+  <dialog id="journal" class="panel journal-panel" aria-labelledby="journal-title">
+    <button class="close-panel" aria-label="Close field journal" data-close="journal">×</button>
+    <span class="eyebrow">YOUR FIELD JOURNAL</span>
+    <h2 id="journal-title">A world worth wandering.</h2>
+    <p class="panel-intro">Eight small moments, sixteen drifting wisps. All yours to find.</p>
+    <div class="journal-progress"><span id="journal-progress-fill"></span></div>
+    <div id="journal-list" class="journal-list"></div>
+    <div class="journal-stats">
+      <div><span>WISPS</span><strong id="stat-wisps">0 / 16</strong></div>
+      <div><span>DISTANCE</span><strong id="stat-walked">0 m</strong></div>
+      <div><span>REGIONS</span><strong id="stat-regions">1 / 8</strong></div>
+    </div>
+    <p class="journal-footnote">Choose a place and your explorer will find the way.<br>Your discoveries are saved on this device.</p>
+  </dialog>
+
+  <dialog id="help" class="panel help-panel" aria-labelledby="help-title">
+    <button class="close-panel" aria-label="Close controls" data-close="help">×</button>
+    <span class="eyebrow">THE WORLD IS YOURS</span>
+    <h2 id="help-title">Take the scenic route.</h2>
+    <p class="panel-intro">There is no hurry, and no wrong turn.</p>
+    <div class="help-grid">
+      <span>Walk</span><span><kbd>W A S D</kbd> or <kbd>↑ ← ↓ →</kbd></span>
+      <span>Run / hop</span><span><kbd>shift</kbd> / <kbd>space</kbd></span>
+      <span>Interact</span><span><kbd>E</kbd> near a golden marker</span>
+      <span>Look around</span><span>Drag · Scroll to zoom</span>
+      <span>Auto-walk</span><span>Click or tap the ground</span>
+      <span>Globe / follow</span><span><kbd>M</kbd></span>
+      <span>Time of day</span><span><kbd>N</kbd></span>
+      <span>Photo mode</span><span><kbd>P</kbd>, then <kbd>C</kbd> to save</span>
+      <span>Field journal</span><span><kbd>J</kbd></span>
+      <span>Return home</span><span><kbd>home</kbd></span>
+      <span>Cancel a route</span><span><kbd>esc</kbd></span>
+    </div>
+    <p class="journal-footnote">You can swim right across the seas.<br>Walk far enough and you will walk into the night — your lantern knows what to do.</p>
+    <button id="start-exploring" class="primary-button">Let's wander <span>↗</span></button>
+  </dialog>
+
+  <noscript><div class="fallback"><p>Enable JavaScript to explore Tiny World.</p></div></noscript>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="src/00-core.js"></script>
+  <script src="src/10-nature.js"></script>
+  <script src="src/20-props.js"></script>
+  <script src="src/30-planet.js"></script>
+  <script src="src/40-biomes-a.js"></script>
+  <script src="src/41-biomes-b.js"></script>
+  <script src="src/50-walker.js"></script>
+  <script src="src/60-explorer.js"></script>
+  <script src="src/70-audio.js"></script>
+  <script src="src/80-render.js"></script>
+  <script src="src/90-app.js"></script>
+</body>
+</html>
