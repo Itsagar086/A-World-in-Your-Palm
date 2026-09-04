@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — build.mjs
+ * A World in Your Palm — build.mjs
  *
  * Inlines the Three.js runtime and every source file into one self-contained
  * HTML document. The result opens straight from the file system with no

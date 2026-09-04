@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 20-props.js
+ * A World in Your Palm — 20-props.js
  * The made things: shelters, fences, lanterns, boats, bridges, machinery.
  * Anything a biome uses more than once lives here so the world reads as one
  * civilisation rather than seven unrelated dioramas.

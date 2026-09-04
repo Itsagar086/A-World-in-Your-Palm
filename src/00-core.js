@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 00-core.js
+ * A World in Your Palm — 00-core.js
  * The primitive kit. Everything in this world is built from code: there are no
  * textures, no model files, no atlases. A handful of tiny helpers stamp out
  * boxes, faceted rocks, cones and swept ribbons, and every prop in the game is

@@ -1,4 +1,4 @@
-# Tiny World — A Handmade Planet
+# A World in Your Palm
 
 A small explorer, eight living regions, and one planet you can walk all the way
 around. Every model, texture, sound and animation in it is generated in code at
@@ -17,14 +17,14 @@ self-contained file (Three.js inlined) that works offline from a USB stick.
 
 | # | Region | Wonder | What happens |
 |---|--------|--------|--------------|
-| 01 | **Mosswood** — forest | Light the camp | Lanterns, campfire and fireflies come on across the whole clearing |
-| 02 | **Honeyfield** — meadow | Start the windmill | The sails turn, the bees come out, the flowerbeds open |
-| 03 | **Amber Dunes** — desert | Turn the dial | A hidden spring wells up and an oasis grows out of the sand |
-| 04 | **Driftwood Bay** — coast | Ring the bell | The little sailboat casts off and sails a circuit of the cove |
-| 05 | **Coral Hollow** — reef | Wake the reef | Every coral in the region lights up and the fish come to look |
-| 06 | **Cinderpeak** — volcano | Read the instruments | The mountain answers: the lava brightens and the crater stirs |
-| 07 | **Frostveil** — tundra | Ring the chime | An aurora unrolls across the polar sky |
-| 08 | **Glowgrove** — hollow | Open the jars | Giant fungus and crystal light the bowl in slow green |
+| 01 | **Banyan Hollow** — forest | Light the camp | Lanterns, campfire and fireflies come on across the whole clearing |
+| 02 | **Marigold Fields** — meadow | Start the windmill | The sails turn, the bees come out, the flowerbeds open |
+| 03 | **Saffron Dunes** — desert | Turn the dial | A hidden spring wells up and an oasis grows out of the sand |
+| 04 | **Coconut Cove** — coast | Ring the bell | The little sailboat casts off and sails a circuit of the cove |
+| 05 | **Pearl Reef** — reef | Wake the reef | Every coral in the region lights up and the fish come to look |
+| 06 | **Barren Peak** — volcano | Read the instruments | The mountain answers: the lava brightens and the crater stirs |
+| 07 | **Snow Valley** — tundra | Ring the chime | An aurora unrolls across the polar sky |
+| 08 | **Firefly Hollow** — hollow | Open the jars | Giant fungus and crystal light the bowl in slow green |
 
 Plus **sixteen wisps** scattered across the planet to find, a companion creature
 that follows you around, and a field journal that remembers everything.
@@ -70,8 +70,8 @@ src/
   10-nature.js      trees, plants, rocks, water, fire, animals
   20-props.js       shelters, fences, lanterns, boats, bridges, machinery
   30-planet.js      terrain generation, regions, placement, sky
-  40-biomes-a.js    Mosswood, Honeyfield, Amber Dunes, Driftwood Bay
-  41-biomes-b.js    Coral Hollow, Cinderpeak, Frostveil, Glowgrove
+  40-biomes-a.js    Banyan Hollow, Marigold Fields, Saffron Dunes, Coconut Cove
+  41-biomes-b.js    Pearl Reef, Barren Peak, Snow Valley, Firefly Hollow
   50-walker.js      walking on a sphere, collision, A* navigation
   60-explorer.js    the character rig, the companion, the waypoint marker
   70-audio.js       the synthesiser
@@ -145,5 +145,3 @@ a gesture) and pauses itself when the tab is hidden.
   it.
 - Progress is saved in `localStorage` under `tiny-world-save-v1`. Append `?qa`
   to the URL for a throwaway save slot.
-- `tiny-world.html` in the project root is an earlier, separate prototype and is
-  not part of this build.

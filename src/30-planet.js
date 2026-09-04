@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 30-planet.js
+ * A World in Your Palm — 30-planet.js
  * The globe. Eight biome centres are scattered over a sphere; every point on
  * the surface belongs to whichever centre is nearest, with a wobbled distance
  * metric so the borders are ragged rather than Voronoi-clean. Elevation is a
@@ -34,42 +34,42 @@
 
   var BIOMES = [
     {
-      id: 'mosswood', name: 'Mosswood', kind: 'Forest',
+      id: 'mosswood', name: 'Banyan Hollow', kind: 'Forest',
       tagline: 'Every long journey starts with one small step off the path.',
       color: '#4e9159', accent: '#a7d886', lat: 18, lon: -6, elevation: 0.25,
     },
     {
-      id: 'honeyfield', name: 'Honeyfield', kind: 'Meadow',
+      id: 'honeyfield', name: 'Marigold Fields', kind: 'Meadow',
       tagline: 'A little care, and the whole hillside answers.',
       color: '#93aa5f', accent: '#f0d27a', lat: 30, lon: -74, elevation: 0.23,
     },
     {
-      id: 'amberdunes', name: 'Amber Dunes', kind: 'Desert',
+      id: 'amberdunes', name: 'Saffron Dunes', kind: 'Desert',
       tagline: 'Every dune is hiding something green.',
       color: '#e3b76a', accent: '#f2cb8a', lat: 24, lon: 68, elevation: 0.26,
     },
     {
-      id: 'driftbay', name: 'Driftwood Bay', kind: 'Coast',
+      id: 'driftbay', name: 'Coconut Cove', kind: 'Coast',
       tagline: 'Leave nothing but very small footprints.',
       color: '#e7cf97', accent: '#f5ab86', lat: -24, lon: 62, elevation: 0.13,
     },
     {
-      id: 'coralhollow', name: 'Coral Hollow', kind: 'Reef',
+      id: 'coralhollow', name: 'Pearl Reef', kind: 'Reef',
       tagline: 'There is a whole other world under the blue.',
       color: '#5f8f8b', accent: '#7ad9d4', lat: -42, lon: -26, elevation: -0.68,
     },
     {
-      id: 'cinderpeak', name: 'Cinderpeak', kind: 'Volcano',
+      id: 'cinderpeak', name: 'Barren Peak', kind: 'Volcano',
       tagline: 'Even a sleeping mountain likes to be asked how it is.',
       color: '#6b564c', accent: '#f59a68', lat: 2, lon: -152, elevation: 0.33,
     },
     {
-      id: 'frostveil', name: 'Frostveil', kind: 'Tundra',
+      id: 'frostveil', name: 'Snow Valley', kind: 'Tundra',
       tagline: 'The quietest places keep the brightest secrets.',
       color: '#d9ece3', accent: '#b3ddef', lat: 66, lon: 156, elevation: 0.31,
     },
     {
-      id: 'glowgrove', name: 'Glowgrove', kind: 'Hollow',
+      id: 'glowgrove', name: 'Firefly Hollow', kind: 'Hollow',
       tagline: 'Some things only show themselves after dark.',
       color: '#3f5c72', accent: '#9fe0c8', lat: -30, lon: 150, elevation: 0.28,
     },
@@ -198,7 +198,7 @@
     var detail = options.terrainDetail || 40;
 
     var root = new T.Group();
-    root.name = 'Tiny World';
+    root.name = 'A World in Your Palm';
     var propRoot = new T.Group();
     root.add(propRoot);
 

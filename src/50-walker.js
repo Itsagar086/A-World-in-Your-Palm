@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 50-walker.js
+ * A World in Your Palm — 50-walker.js
  * Walking on a sphere.
  *
  * The explorer has no (x, y, z) position. It has a unit normal — the direction

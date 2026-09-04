@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 60-explorer.js
+ * A World in Your Palm — 60-explorer.js
  * The explorer and the small creature that decides to come along.
  *
  * The character is a real skeleton — nested pivots for hips, knees, ankles,

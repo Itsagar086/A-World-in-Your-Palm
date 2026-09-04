@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0c1c2c">
 <meta name="description" content="A small explorer. Eight living regions. One handmade planet you can walk all the way around — with a real day and night.">
-<title>Tiny World — A Handmade Planet</title>
+<title>A World in Your Palm — Eight Small Wonders</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%234e9159'/%3E%3Cpath d='M9 22 Q24 11 26 30 T52 42' stroke='%23e7cf97' stroke-width='8' fill='none'/%3E%3Ccircle cx='46' cy='18' r='5' fill='%23f0d27a'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -183,7 +183,7 @@ body.photo-mode .photo-frame{opacity:1}
 }
 @media(max-width:650px){
   .topbar{padding:max(19px,env(safe-area-inset-top)) 17px 13px;gap:8px}
-  .brand{font-size:10px;letter-spacing:.16em}
+  .brand{font-size:9px;letter-spacing:.09em}
   .edition{display:none}
   .wordmark{gap:8px}
   .planet-logo{width:24px;height:24px}
@@ -234,14 +234,14 @@ body.photo-mode .photo-frame{opacity:1}
 </style>
 </head>
 <body>
-  <canvas id="world" tabindex="0" role="application" aria-label="Tiny World, an interactive handmade planet" aria-describedby="controls-description"></canvas>
+  <canvas id="world" tabindex="0" role="application" aria-label="A World in Your Palm, an interactive handmade planet" aria-describedby="controls-description"></canvas>
   <div class="vignette" aria-hidden="true"></div>
   <div class="photo-frame" aria-hidden="true"></div>
 
   <header class="topbar">
     <div class="wordmark">
       <span class="planet-logo" aria-hidden="true"><i></i></span>
-      <div><span class="brand">TINY WORLD</span><span class="edition">A HANDMADE PLANET</span></div>
+      <div><span class="brand">A WORLD IN YOUR PALM</span><span class="edition">EIGHT SMALL WONDERS</span></div>
     </div>
 
     <button id="journal-button" class="journal-button" aria-label="Open field journal" title="Field journal (J)">
@@ -273,12 +273,12 @@ body.photo-mode .photo-frame{opacity:1}
 
   <div id="loading" class="loading">
     <span class="loading-orb" aria-hidden="true"></span>
-    <p>Growing a tiny world<span>One moment of wonder.</span></p>
+    <p>Growing a world in your palm<span>One moment of wonder.</span></p>
   </div>
 
   <div id="region" class="region">
     <span class="eyebrow" id="region-kind">FOREST · 01</span>
-    <h1 id="region-name">Mosswood</h1>
+    <h1 id="region-name">Banyan Hollow</h1>
     <p id="region-caption">Every long journey starts with one small step off the path.</p>
   </div>
 
@@ -293,7 +293,7 @@ body.photo-mode .photo-frame{opacity:1}
   <div id="compass" class="compass" hidden aria-hidden="true">
     <div class="compass-copy">
       <small>NEAREST WONDER</small>
-      <strong id="compass-name">Mosswood</strong>
+      <strong id="compass-name">Banyan Hollow</strong>
       <span id="compass-distance">0m</span>
     </div>
     <div class="compass-dial"><span id="compass-needle"></span></div>
@@ -334,10 +334,10 @@ body.photo-mode .photo-frame{opacity:1}
   <div id="joystick" class="joystick" aria-label="Movement joystick"><span class="joystick-cross"></span><span id="joystick-knob"></span></div>
   <button id="jump-button" class="jump-button" aria-label="Jump"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 11 5-6 5 6M12 5v13M5 20h14"/></svg></button>
 
-  <div id="controls-description" class="sr-only">WASD or arrow keys to walk. Shift to run. Space to hop. E to interact with a nearby landmark. Click or tap the ground to walk there. Drag to rotate the camera. Scroll or pinch to zoom. M toggles globe and follow views. N changes the time of day. P enters photo mode. J opens your field journal. Home returns to Mosswood. Escape cancels your route. On touch screens, use the movement joystick and jump button.</div>
+  <div id="controls-description" class="sr-only">WASD or arrow keys to walk. Shift to run. Space to hop. E to interact with a nearby landmark. Click or tap the ground to walk there. Drag to rotate the camera. Scroll or pinch to zoom. M toggles globe and follow views. N changes the time of day. P enters photo mode. J opens your field journal. Home returns to Banyan Hollow. Escape cancels your route. On touch screens, use the movement joystick and jump button.</div>
   <output id="telemetry" class="sr-only" aria-hidden="true"></output>
 
-  <div id="fallback" class="fallback" hidden><p>This tiny world needs WebGL 2.<span>Please use a current browser with graphics acceleration, then reload.</span></p></div>
+  <div id="fallback" class="fallback" hidden><p>This little world needs WebGL 2.<span>Please use a current browser with graphics acceleration, then reload.</span></p></div>
 
   <dialog id="journal" class="panel journal-panel" aria-labelledby="journal-title">
     <button class="close-panel" aria-label="Close field journal" data-close="journal">×</button>
@@ -376,7 +376,7 @@ body.photo-mode .photo-frame{opacity:1}
     <button id="start-exploring" class="primary-button">Let's wander <span>↗</span></button>
   </dialog>
 
-  <noscript><div class="fallback"><p>Enable JavaScript to explore Tiny World.</p></div></noscript>
+  <noscript><div class="fallback"><p>Enable JavaScript to explore A World in Your Palm.</p></div></noscript>
 
   <script src="vendor/three.min.js"></script>
   <script src="src/00-core.js"></script>

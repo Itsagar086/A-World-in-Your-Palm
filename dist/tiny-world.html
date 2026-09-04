@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0c1c2c">
 <meta name="description" content="A small explorer. Eight living regions. One handmade planet you can walk all the way around — with a real day and night.">
-<title>Tiny World — A Handmade Planet</title>
+<title>A World in Your Palm — Eight Small Wonders</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='%234e9159'/%3E%3Cpath d='M9 22 Q24 11 26 30 T52 42' stroke='%23e7cf97' stroke-width='8' fill='none'/%3E%3Ccircle cx='46' cy='18' r='5' fill='%23f0d27a'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -183,7 +183,7 @@ body.photo-mode .photo-frame{opacity:1}
 }
 @media(max-width:650px){
   .topbar{padding:max(19px,env(safe-area-inset-top)) 17px 13px;gap:8px}
-  .brand{font-size:10px;letter-spacing:.16em}
+  .brand{font-size:9px;letter-spacing:.09em}
   .edition{display:none}
   .wordmark{gap:8px}
   .planet-logo{width:24px;height:24px}
@@ -234,14 +234,14 @@ body.photo-mode .photo-frame{opacity:1}
 </style>
 </head>
 <body>
-  <canvas id="world" tabindex="0" role="application" aria-label="Tiny World, an interactive handmade planet" aria-describedby="controls-description"></canvas>
+  <canvas id="world" tabindex="0" role="application" aria-label="A World in Your Palm, an interactive handmade planet" aria-describedby="controls-description"></canvas>
   <div class="vignette" aria-hidden="true"></div>
   <div class="photo-frame" aria-hidden="true"></div>
 
   <header class="topbar">
     <div class="wordmark">
       <span class="planet-logo" aria-hidden="true"><i></i></span>
-      <div><span class="brand">TINY WORLD</span><span class="edition">A HANDMADE PLANET</span></div>
+      <div><span class="brand">A WORLD IN YOUR PALM</span><span class="edition">EIGHT SMALL WONDERS</span></div>
     </div>
 
     <button id="journal-button" class="journal-button" aria-label="Open field journal" title="Field journal (J)">
@@ -273,12 +273,12 @@ body.photo-mode .photo-frame{opacity:1}
 
   <div id="loading" class="loading">
     <span class="loading-orb" aria-hidden="true"></span>
-    <p>Growing a tiny world<span>One moment of wonder.</span></p>
+    <p>Growing a world in your palm<span>One moment of wonder.</span></p>
   </div>
 
   <div id="region" class="region">
     <span class="eyebrow" id="region-kind">FOREST · 01</span>
-    <h1 id="region-name">Mosswood</h1>
+    <h1 id="region-name">Banyan Hollow</h1>
     <p id="region-caption">Every long journey starts with one small step off the path.</p>
   </div>
 
@@ -293,7 +293,7 @@ body.photo-mode .photo-frame{opacity:1}
   <div id="compass" class="compass" hidden aria-hidden="true">
     <div class="compass-copy">
       <small>NEAREST WONDER</small>
-      <strong id="compass-name">Mosswood</strong>
+      <strong id="compass-name">Banyan Hollow</strong>
       <span id="compass-distance">0m</span>
     </div>
     <div class="compass-dial"><span id="compass-needle"></span></div>
@@ -334,10 +334,10 @@ body.photo-mode .photo-frame{opacity:1}
   <div id="joystick" class="joystick" aria-label="Movement joystick"><span class="joystick-cross"></span><span id="joystick-knob"></span></div>
   <button id="jump-button" class="jump-button" aria-label="Jump"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 11 5-6 5 6M12 5v13M5 20h14"/></svg></button>
 
-  <div id="controls-description" class="sr-only">WASD or arrow keys to walk. Shift to run. Space to hop. E to interact with a nearby landmark. Click or tap the ground to walk there. Drag to rotate the camera. Scroll or pinch to zoom. M toggles globe and follow views. N changes the time of day. P enters photo mode. J opens your field journal. Home returns to Mosswood. Escape cancels your route. On touch screens, use the movement joystick and jump button.</div>
+  <div id="controls-description" class="sr-only">WASD or arrow keys to walk. Shift to run. Space to hop. E to interact with a nearby landmark. Click or tap the ground to walk there. Drag to rotate the camera. Scroll or pinch to zoom. M toggles globe and follow views. N changes the time of day. P enters photo mode. J opens your field journal. Home returns to Banyan Hollow. Escape cancels your route. On touch screens, use the movement joystick and jump button.</div>
   <output id="telemetry" class="sr-only" aria-hidden="true"></output>
 
-  <div id="fallback" class="fallback" hidden><p>This tiny world needs WebGL 2.<span>Please use a current browser with graphics acceleration, then reload.</span></p></div>
+  <div id="fallback" class="fallback" hidden><p>This little world needs WebGL 2.<span>Please use a current browser with graphics acceleration, then reload.</span></p></div>
 
   <dialog id="journal" class="panel journal-panel" aria-labelledby="journal-title">
     <button class="close-panel" aria-label="Close field journal" data-close="journal">×</button>
@@ -376,7 +376,7 @@ body.photo-mode .photo-frame{opacity:1}
     <button id="start-exploring" class="primary-button">Let's wander <span>↗</span></button>
   </dialog>
 
-  <noscript><div class="fallback"><p>Enable JavaScript to explore Tiny World.</p></div></noscript>
+  <noscript><div class="fallback"><p>Enable JavaScript to explore A World in Your Palm.</p></div></noscript>
 
   <script>/* vendor/three.min.js */
 console.warn('Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation'),
@@ -390,7 +390,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/00-core.js */
 /* =============================================================================
- * Tiny World — 00-core.js
+ * A World in Your Palm — 00-core.js
  * The primitive kit. Everything in this world is built from code: there are no
  * textures, no model files, no atlases. A handful of tiny helpers stamp out
  * boxes, faceted rocks, cones and swept ribbons, and every prop in the game is
@@ -793,7 +793,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/10-nature.js */
 /* =============================================================================
- * Tiny World — 10-nature.js
+ * A World in Your Palm — 10-nature.js
  * The living scenery: trees, bushes, flowers, grass, rocks, crystals, corals
  * and the small animals that wander the biomes. Every one is a pure function
  * of (parent, position, params) so the biome files read like a planting list.
@@ -813,7 +813,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
   /* --- trees --------------------------------------------------------------- */
 
-  /** Layered conifer. The staple of Mosswood and the cold biomes. */
+  /** Layered conifer. The staple of Banyan Hollow and the cold biomes. */
   N.pine = function (parent, x, z, height, color, rotY) {
     height = height === undefined ? 1.5 : height;
     color = color || '#2c8055';
@@ -1367,7 +1367,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/20-props.js */
 /* =============================================================================
- * Tiny World — 20-props.js
+ * A World in Your Palm — 20-props.js
  * The made things: shelters, fences, lanterns, boats, bridges, machinery.
  * Anything a biome uses more than once lives here so the world reads as one
  * civilisation rather than seven unrelated dioramas.
@@ -1938,7 +1938,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/30-planet.js */
 /* =============================================================================
- * Tiny World — 30-planet.js
+ * A World in Your Palm — 30-planet.js
  * The globe. Eight biome centres are scattered over a sphere; every point on
  * the surface belongs to whichever centre is nearest, with a wobbled distance
  * metric so the borders are ragged rather than Voronoi-clean. Elevation is a
@@ -1973,42 +1973,42 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
   var BIOMES = [
     {
-      id: 'mosswood', name: 'Mosswood', kind: 'Forest',
+      id: 'mosswood', name: 'Banyan Hollow', kind: 'Forest',
       tagline: 'Every long journey starts with one small step off the path.',
       color: '#4e9159', accent: '#a7d886', lat: 18, lon: -6, elevation: 0.25,
     },
     {
-      id: 'honeyfield', name: 'Honeyfield', kind: 'Meadow',
+      id: 'honeyfield', name: 'Marigold Fields', kind: 'Meadow',
       tagline: 'A little care, and the whole hillside answers.',
       color: '#93aa5f', accent: '#f0d27a', lat: 30, lon: -74, elevation: 0.23,
     },
     {
-      id: 'amberdunes', name: 'Amber Dunes', kind: 'Desert',
+      id: 'amberdunes', name: 'Saffron Dunes', kind: 'Desert',
       tagline: 'Every dune is hiding something green.',
       color: '#e3b76a', accent: '#f2cb8a', lat: 24, lon: 68, elevation: 0.26,
     },
     {
-      id: 'driftbay', name: 'Driftwood Bay', kind: 'Coast',
+      id: 'driftbay', name: 'Coconut Cove', kind: 'Coast',
       tagline: 'Leave nothing but very small footprints.',
       color: '#e7cf97', accent: '#f5ab86', lat: -24, lon: 62, elevation: 0.13,
     },
     {
-      id: 'coralhollow', name: 'Coral Hollow', kind: 'Reef',
+      id: 'coralhollow', name: 'Pearl Reef', kind: 'Reef',
       tagline: 'There is a whole other world under the blue.',
       color: '#5f8f8b', accent: '#7ad9d4', lat: -42, lon: -26, elevation: -0.68,
     },
     {
-      id: 'cinderpeak', name: 'Cinderpeak', kind: 'Volcano',
+      id: 'cinderpeak', name: 'Barren Peak', kind: 'Volcano',
       tagline: 'Even a sleeping mountain likes to be asked how it is.',
       color: '#6b564c', accent: '#f59a68', lat: 2, lon: -152, elevation: 0.33,
     },
     {
-      id: 'frostveil', name: 'Frostveil', kind: 'Tundra',
+      id: 'frostveil', name: 'Snow Valley', kind: 'Tundra',
       tagline: 'The quietest places keep the brightest secrets.',
       color: '#d9ece3', accent: '#b3ddef', lat: 66, lon: 156, elevation: 0.31,
     },
     {
-      id: 'glowgrove', name: 'Glowgrove', kind: 'Hollow',
+      id: 'glowgrove', name: 'Firefly Hollow', kind: 'Hollow',
       tagline: 'Some things only show themselves after dark.',
       color: '#3f5c72', accent: '#9fe0c8', lat: -30, lon: 150, elevation: 0.28,
     },
@@ -2137,7 +2137,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     var detail = options.terrainDetail || 40;
 
     var root = new T.Group();
-    root.name = 'Tiny World';
+    root.name = 'A World in Your Palm';
     var propRoot = new T.Group();
     root.add(propRoot);
 
@@ -2707,8 +2707,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/40-biomes-a.js */
 /* =============================================================================
- * Tiny World — 40-biomes-a.js
- * Mosswood, Honeyfield, Amber Dunes, Driftwood Bay.
+ * A World in Your Palm — 40-biomes-a.js
+ * Banyan Hollow, Marigold Fields, Saffron Dunes, Coconut Cove.
  *
  * Each builder receives the planet's authoring context and plants its region in
  * flat local metres. `ctx.place(id, x, z, build)` handles the sphere; the
@@ -2852,7 +2852,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
         if (treeLights) treeLights.userData.setLit(lit);
         return lit
           ? 'The camp is awake. Lanterns, firelight, and a hundred little wings.'
-          : 'The fire settles to embers. Mosswood breathes out.';
+          : 'The fire settles to embers. Banyan Hollow breathes out.';
       };
       g.userData.flames = fire;
     });
@@ -3522,8 +3522,8 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/41-biomes-b.js */
 /* =============================================================================
- * Tiny World — 41-biomes-b.js
- * Coral Hollow, Cinderpeak, Frostveil, Glowgrove.
+ * A World in Your Palm — 41-biomes-b.js
+ * Pearl Reef, Barren Peak, Snow Valley, Firefly Hollow.
  * The stranger half of the planet: one region is entirely underwater, one is
  * a live volcano, one is polar, and one only makes sense in the dark.
  * ============================================================================= */
@@ -3927,7 +3927,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
       g.userData.activate = function () {
         reading = !reading;
         return reading
-          ? 'The instruments come alive. Cinderpeak grumbles, pleased to be noticed.'
+          ? 'The instruments come alive. Barren Peak grumbles, pleased to be noticed.'
           : 'The readings settle. The mountain goes back to dozing.';
       };
     }, { heading: 0.4 });
@@ -4361,7 +4361,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
         swarm.visible = awake;
         return awake
           ? 'Every jar opens at once. The hollow fills with slow green light.'
-          : 'The lights wind down, one jar at a time. Goodnight, Glowgrove.';
+          : 'The lights wind down, one jar at a time. Goodnight, Firefly Hollow.';
       };
     });
     ctx.block(id, -0.4, 1.9, 1.0);
@@ -4414,7 +4414,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/50-walker.js */
 /* =============================================================================
- * Tiny World — 50-walker.js
+ * A World in Your Palm — 50-walker.js
  * Walking on a sphere.
  *
  * The explorer has no (x, y, z) position. It has a unit normal — the direction
@@ -5008,7 +5008,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/60-explorer.js */
 /* =============================================================================
- * Tiny World — 60-explorer.js
+ * A World in Your Palm — 60-explorer.js
  * The explorer and the small creature that decides to come along.
  *
  * The character is a real skeleton — nested pivots for hips, knees, ankles,
@@ -5602,7 +5602,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/70-audio.js */
 /* =============================================================================
- * Tiny World — 70-audio.js
+ * A World in Your Palm — 70-audio.js
  * Every sound in the game is synthesised at runtime: there are no audio files.
  *
  * Footsteps are a filtered noise burst plus a low sine "thud", tuned per biome
@@ -6037,7 +6037,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/80-render.js */
 /* =============================================================================
- * Tiny World — 80-render.js
+ * A World in Your Palm — 80-render.js
  * Renderer, lighting, the day/night cycle, and the post chain.
  *
  * The sun is a directional light that orbits the planet, so there is a real
@@ -6650,7 +6650,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 </script>
 <script>/* src/90-app.js */
 /* =============================================================================
- * Tiny World — 90-app.js
+ * A World in Your Palm — 90-app.js
  * Wiring: renderer, cameras, input, HUD, persistence, and the frame loop.
  * ============================================================================= */
 (function (global) {
@@ -6739,7 +6739,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
   waypoint.visible = false;
   scene.add(waypoint);
 
-  /* Open on a bright mid-morning over Mosswood, wherever that happens to fall
+  /* Open on a bright mid-morning over Banyan Hollow, wherever that happens to fall
    * on the sun's orbit, and build the navigation graph now rather than on the
    * player's first click — it is a ~100 ms job and it should not land mid-walk. */
   lighting.startAt(spawn, 0.66);
@@ -6767,7 +6767,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     if (!renderer.capabilities.isWebGL2) throw new Error('WebGL2 required for the post chain');
     post = TW.render.createPost(renderer, scene, camera);
   } catch (err) {
-    console.warn('Tiny World: falling back to direct rendering.', err);
+    console.warn('A World in Your Palm: falling back to direct rendering.', err);
     post = {
       render: function () {
         renderer.setRenderTarget(null);
@@ -7100,7 +7100,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
     walker.forward.copy(followOrbit);
     companion.teleportTo(WALK.advance(walker.normal, PLANET.BIOMES[0].east, 1.2, PLANET.RADIUS));
     setView('follow');
-    toast('Back where the trail began.', 'MOSSWOOD', 3);
+    toast('Back where the trail began.', PLANET.BIOMES[0].name.toUpperCase(), 3);
   }
 
   function doJump() {

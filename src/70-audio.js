@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 70-audio.js
+ * A World in Your Palm — 70-audio.js
  * Every sound in the game is synthesised at runtime: there are no audio files.
  *
  * Footsteps are a filtered noise burst plus a low sine "thud", tuned per biome

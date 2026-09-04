@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 80-render.js
+ * A World in Your Palm — 80-render.js
  * Renderer, lighting, the day/night cycle, and the post chain.
  *
  * The sun is a directional light that orbits the planet, so there is a real

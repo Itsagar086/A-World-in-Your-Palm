@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 10-nature.js
+ * A World in Your Palm — 10-nature.js
  * The living scenery: trees, bushes, flowers, grass, rocks, crystals, corals
  * and the small animals that wander the biomes. Every one is a pure function
  * of (parent, position, params) so the biome files read like a planting list.
@@ -19,7 +19,7 @@
 
   /* --- trees --------------------------------------------------------------- */
 
-  /** Layered conifer. The staple of Mosswood and the cold biomes. */
+  /** Layered conifer. The staple of Banyan Hollow and the cold biomes. */
   N.pine = function (parent, x, z, height, color, rotY) {
     height = height === undefined ? 1.5 : height;
     color = color || '#2c8055';

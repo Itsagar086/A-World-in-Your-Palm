@@ -1,5 +1,5 @@
 /* =============================================================================
- * Tiny World — 90-app.js
+ * A World in Your Palm — 90-app.js
  * Wiring: renderer, cameras, input, HUD, persistence, and the frame loop.
  * ============================================================================= */
 (function (global) {
@@ -88,7 +88,7 @@
   waypoint.visible = false;
   scene.add(waypoint);
 
-  /* Open on a bright mid-morning over Mosswood, wherever that happens to fall
+  /* Open on a bright mid-morning over Banyan Hollow, wherever that happens to fall
    * on the sun's orbit, and build the navigation graph now rather than on the
    * player's first click — it is a ~100 ms job and it should not land mid-walk. */
   lighting.startAt(spawn, 0.66);
@@ -116,7 +116,7 @@
     if (!renderer.capabilities.isWebGL2) throw new Error('WebGL2 required for the post chain');
     post = TW.render.createPost(renderer, scene, camera);
   } catch (err) {
-    console.warn('Tiny World: falling back to direct rendering.', err);
+    console.warn('A World in Your Palm: falling back to direct rendering.', err);
     post = {
       render: function () {
         renderer.setRenderTarget(null);
@@ -449,7 +449,7 @@
     walker.forward.copy(followOrbit);
     companion.teleportTo(WALK.advance(walker.normal, PLANET.BIOMES[0].east, 1.2, PLANET.RADIUS));
     setView('follow');
-    toast('Back where the trail began.', 'MOSSWOOD', 3);
+    toast('Back where the trail began.', PLANET.BIOMES[0].name.toUpperCase(), 3);
   }
 
   function doJump() {
