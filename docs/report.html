@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>A World in Your Palm — Project Report</title>
+<style>
+/* ===========================================================================
+   Print design system.
+   Dark full-bleed cover and section dividers; warm paper stock for the body,
+   so the document is beautiful on screen and still readable on paper.
+   =========================================================================== */
+:root{
+  --ink:#15333a;
+  --ink-soft:#3d5c60;
+  --muted:#6d8a8c;
+  --gold:#9b6f1f;
+  --gold-bright:#c9a227;
+  --teal:#2b7a72;
+  --paper:#fdfcf8;
+  --tint:#f2f0e7;
+  --rule:#dde2d9;
+  --dark:#0d222c;
+  --dark-2:#164049;
+}
+*{box-sizing:border-box}
+html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font:10.5pt/1.62 "Segoe UI","Helvetica Neue",Arial,sans-serif;
+  font-feature-settings:"kern" 1,"liga" 1;
+}
+/* Page geometry lives here, not in the PDF call, so the cover can run
+   edge-to-edge while every other page keeps its margins and footer. */
+@page{ size:A4; margin:14mm 0 16mm; }
+@page :first{ margin:0; }
+
+.sheet{ padding:0 18mm; }
+.wide{ padding:0 12mm; }
+
+/* ---------- typography ---------- */
+h1,h2,h3,h4{ font-family:Georgia,"Times New Roman",serif; font-weight:400; color:var(--ink); }
+h2{ font-size:21pt; line-height:1.15; letter-spacing:-.012em; margin:0 0 2mm; }
+h3{ font-size:13.5pt; line-height:1.25; margin:9mm 0 2.5mm; letter-spacing:-.008em; }
+h4{ font-size:11pt; margin:6mm 0 1.5mm; color:var(--teal); letter-spacing:.005em; }
+p{ margin:0 0 3.2mm; }
+strong{ font-weight:600; color:var(--ink); }
+em{ color:var(--ink-soft); }
+a{ color:var(--teal); text-decoration:none; }
+ul,ol{ margin:0 0 3.5mm; padding-left:5.5mm; }
+li{ margin-bottom:1.4mm; }
+code{ font-family:Consolas,"SF Mono",Menlo,monospace; font-size:8.6pt;
+      background:var(--tint); padding:.4mm 1.2mm; border-radius:1mm; color:#2c4f55; }
+
+.eyebrow{ font:600 7.5pt/1 "Segoe UI",sans-serif; letter-spacing:.22em;
+          text-transform:uppercase; color:var(--gold); }
+.lead{ font-size:11.5pt; line-height:1.62; color:var(--ink-soft); margin-bottom:5mm; }
+.note{ font-size:9pt; color:var(--muted); font-style:italic; }
+
+/* ---------- cover ---------- */
+.cover{
+  background:linear-gradient(160deg,#0b1d27 0%,#123640 46%,#0d2530 100%);
+  color:#e7efe2; height:297mm; position:relative; overflow:hidden;
+  padding:30mm 18mm 0; break-after:page;
+}
+/* A paper-coloured strip along the foot of the cover. Chrome always draws the
+   page footer, so rather than fight it, the cover is designed around it. */
+.cover:before{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:21mm;
+  background:var(--paper); z-index:2;
+}
+.cover:after{
+  content:""; position:absolute; inset:auto -30mm 21mm -30mm; height:70mm;
+  background:radial-gradient(ellipse at 50% 0%,#2a6f6a55,transparent 70%);
+}
+.cover .eyebrow{ color:#d9b95f; }
+.cover h1{ font-size:40pt; line-height:1.02; margin:6mm 0 0; color:#fbf7e9;
+           letter-spacing:-.022em; }
+.cover .sub{ font-family:Georgia,serif; font-style:italic; font-size:15pt;
+             color:#9fc0b8; margin:3mm 0 0; }
+.cover .rule{ width:26mm; height:1.2pt; background:#d9b95f; margin:9mm 0 7mm; }
+.cover .blurb{ font-size:10.5pt; line-height:1.7; color:#b9cfc7; max-width:118mm; }
+.cover-planet{ position:absolute; right:-24mm; top:82mm; opacity:.95; }
+.cover-meta{ position:absolute; left:18mm; right:18mm; bottom:30mm; z-index:3;
+             display:flex; gap:6mm; }
+.cover-meta div{ flex:1; border-top:.6pt solid #ffffff2e; padding-top:2.5mm; }
+.cover-meta span{ display:block; font-size:6.8pt; letter-spacing:.2em;
+                  text-transform:uppercase; color:#7f9d96; margin-bottom:1.2mm; }
+.cover-meta strong{ font-family:Georgia,serif; font-size:12pt; font-weight:400; color:#eef4e6; }
+
+/* ---------- section divider ---------- */
+.divider{
+  background:linear-gradient(150deg,var(--dark),var(--dark-2));
+  color:#e7efe2; padding:11mm 18mm; margin:0 0 8mm;
+  break-inside:avoid; break-before:page;
+}
+.divider .num{ font-family:Georgia,serif; font-size:34pt; line-height:1;
+               color:#d9b95f4d; float:right; margin-top:-2mm; }
+.divider .eyebrow{ color:#d9b95f; }
+.divider h2{ color:#fbf7e9; margin-top:1.5mm; }
+.divider p{ color:#a9c4bd; max-width:130mm; margin:2mm 0 0; font-size:10pt; }
+
+/* ---------- tables ---------- */
+table{ width:100%; border-collapse:collapse; margin:0 0 5mm; font-size:9.2pt;
+       break-inside:avoid; }
+th{ text-align:left; font:600 7.4pt/1.3 "Segoe UI",sans-serif; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--gold); padding:0 3mm 1.8mm 0;
+    border-bottom:.9pt solid var(--ink); vertical-align:bottom; }
+td{ padding:2mm 3mm 2mm 0; border-bottom:.4pt solid var(--rule); vertical-align:top; }
+tr:last-child td{ border-bottom:none; }
+td.num,th.num{ text-align:right; font-variant-numeric:tabular-nums; padding-right:0; }
+table.compact td,table.compact th{ padding-top:1.3mm; padding-bottom:1.3mm; }
+.zebra tr:nth-child(even) td{ background:#f7f6ef; }
+
+/* ---------- blocks ---------- */
+pre{ background:#12303a; color:#dbe7dd; font-family:Consolas,monospace;
+     font-size:8.1pt; line-height:1.55; padding:4.5mm 5mm; border-radius:2mm;
+     margin:0 0 5mm; white-space:pre; overflow:hidden; break-inside:avoid; }
+pre .c{ color:#7fa79c; }        /* comment  */
+pre .k{ color:#d9b95f; }        /* keyword  */
+pre .s{ color:#9fd0a8; }        /* string   */
+pre.light{ background:var(--tint); color:#2c4f55; border:.4pt solid var(--rule); }
+pre.light .c{ color:#84999a; }
+pre.light .k{ color:#9b6f1f; }
+
+.callout{ border-left:2.2pt solid var(--gold-bright); background:#faf6ea;
+          padding:3.5mm 5mm; margin:0 0 5mm; font-size:9.6pt; break-inside:avoid; }
+.callout strong{ color:var(--gold); }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:0 8mm; }
+.grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:4mm; margin-bottom:5mm; }
+.stat{ background:var(--tint); border-radius:2mm; padding:3.5mm 4mm; break-inside:avoid; }
+.stat span{ display:block; font-size:6.8pt; letter-spacing:.17em;
+            text-transform:uppercase; color:var(--muted); margin-bottom:1.5mm; }
+.stat strong{ font-family:Georgia,serif; font-size:15pt; font-weight:400;
+              color:var(--teal); line-height:1; }
+.stat em{ font-style:normal; font-size:8pt; color:var(--muted); display:block; margin-top:1mm; }
+
+figure{ margin:0 0 6mm; break-inside:avoid; }
+figcaption{ font-size:8.2pt; color:var(--muted); margin-top:2mm; font-style:italic; }
+
+.chip{ display:inline-block; font-size:7.6pt; padding:.6mm 2mm; border-radius:6mm;
+       background:var(--tint); color:var(--ink-soft); margin:0 1mm 1.4mm 0;
+       font-family:Consolas,monospace; }
+.chip-row{ margin-bottom:3.5mm; }
+
+.toc{ column-count:2; column-gap:10mm; font-size:9.6pt; }
+.toc div{ break-inside:avoid; padding:1.5mm 0; border-bottom:.4pt dotted var(--rule);
+          display:flex; justify-content:space-between; gap:3mm; }
+.toc b{ font-weight:600; color:var(--gold); min-width:6mm; }
+.toc span{ flex:1; }
+
+.avoid{ break-inside:avoid; }
+.pb{ break-before:page; }
+</style>
+</head>
+<body>
+
+<!-- ======================= COVER ======================= -->
+<section class="cover">
+  <svg class="cover-planet" width="330" height="330" viewBox="0 0 330 330" aria-hidden="true">
+    <defs>
+      <radialGradient id="glob" cx="38%" cy="32%">
+        <stop offset="0%" stop-color="#6aa86f"/>
+        <stop offset="55%" stop-color="#3f7d5f"/>
+        <stop offset="100%" stop-color="#12313a"/>
+      </radialGradient>
+      <radialGradient id="halo" cx="50%" cy="50%">
+        <stop offset="60%" stop-color="#5fb8a800"/>
+        <stop offset="100%" stop-color="#5fb8a83a"/>
+      </radialGradient>
+    </defs>
+    <circle cx="165" cy="165" r="158" fill="url(#halo)"/>
+    <circle cx="165" cy="165" r="118" fill="url(#glob)"/>
+    <!-- eight region arcs, using each region's accent colour -->
+    <g fill="none" stroke-width="7" stroke-linecap="round" opacity=".92">
+      <circle cx="165" cy="165" r="132" stroke="#a7d886" stroke-dasharray="62 642"/>
+      <circle cx="165" cy="165" r="132" stroke="#f0d27a" stroke-dasharray="62 642" stroke-dashoffset="-88"/>
+      <circle cx="165" cy="165" r="132" stroke="#f2cb8a" stroke-dasharray="62 642" stroke-dashoffset="-176"/>
+      <circle cx="165" cy="165" r="132" stroke="#f5ab86" stroke-dasharray="62 642" stroke-dashoffset="-264"/>
+      <circle cx="165" cy="165" r="132" stroke="#7ad9d4" stroke-dasharray="62 642" stroke-dashoffset="-352"/>
+      <circle cx="165" cy="165" r="132" stroke="#f59a68" stroke-dasharray="62 642" stroke-dashoffset="-440"/>
+      <circle cx="165" cy="165" r="132" stroke="#b3ddef" stroke-dasharray="62 642" stroke-dashoffset="-528"/>
+      <circle cx="165" cy="165" r="132" stroke="#9fe0c8" stroke-dasharray="62 642" stroke-dashoffset="-616"/>
+    </g>
+    <!-- a suggestion of terrain -->
+    <path d="M64 150 q40-26 78-6 t74-16 q22-8 44 4" stroke="#dbcb91" stroke-width="6"
+          fill="none" opacity=".5" stroke-linecap="round"/>
+    <circle cx="248" cy="86" r="9" fill="#f4dd94" opacity=".9"/>
+  </svg>
+
+  <span class="eyebrow">Project Report</span>
+  <h1>A World in<br>Your Palm</h1>
+  <p class="sub">Eight Small Wonders</p>
+  <div class="rule"></div>
+  <p class="blurb">
+    A complete spherical planet in the browser — eight regions, eight interactive
+    wonders, a real day and night you can walk across, and a small explorer to
+    walk it with. Every tree, cottage, coral, footstep and chime is generated by
+    JavaScript at page load. There is not a single asset file in the project.
+  </p>
+
+  <div class="cover-meta">
+    <div><span>Source</span><strong>7,293 lines</strong></div>
+    <div><span>Dependencies</span><strong>Three.js only</strong></div>
+    <div><span>Asset files</span><strong>Zero</strong></div>
+    <div><span>Ships as</span><strong>997 KB</strong></div>
+    <div><span>Date</span><strong>5 Sep 2026</strong></div>
+  </div>
+</section>
+
+<!-- ======================= CONTENTS ======================= -->
+<section class="sheet">
+  <span class="eyebrow">Contents</span>
+  <h2>What is in this report</h2>
+  <div class="rule" style="width:26mm;height:1.2pt;background:var(--gold-bright);margin:5mm 0 7mm"></div>
+
+  <div class="toc">
+    <div><b>1</b><span>Executive summary</span></div>
+    <div><b>2</b><span>The brief</span></div>
+    <div><b>3</b><span>Phase 1 — Reverse-engineering the reference</span></div>
+    <div><b>4</b><span>Phase 2 — Design decisions</span></div>
+    <div><b>5</b><span>Tech stack</span></div>
+    <div><b>6</b><span>Architecture</span></div>
+    <div><b>7</b><span>The engine, system by system</span></div>
+    <div><b>8</b><span>Call graph — who calls whom</span></div>
+    <div><b>9</b><span>Anatomy of one frame</span></div>
+    <div><b>10</b><span>Build and run — every command</span></div>
+    <div><b>11</b><span>Testing and verification</span></div>
+    <div><b>12</b><span>Performance engineering</span></div>
+    <div><b>13</b><span>Bugs found and fixed</span></div>
+    <div><b>14</b><span>File reference</span></div>
+    <div><b>15</b><span>How to study this project</span></div>
+    <div><b>16</b><span>Extending the game</span></div>
+    <div><b>17</b><span>Appendix — full API surface</span></div>
+  </div>
+
+  <h3>The eight regions</h3>
+  <table class="compact">
+    <tr><th style="width:8mm">#</th><th style="width:26mm">Terrain</th><th style="width:38mm">Region</th><th>The small wonder</th></tr>
+    <tr><td>01</td><td>Forest</td><td><strong>Cubbon Woods</strong></td><td>Light the camp</td></tr>
+    <tr><td>02</td><td>Meadow</td><td><strong>Hesaraghatta Fields</strong></td><td>Start the windmill</td></tr>
+    <tr><td>03</td><td>Desert</td><td><strong>Ramanagara Dunes</strong></td><td>Turn the dial</td></tr>
+    <tr><td>04</td><td>Coast</td><td><strong>Ulsoor Bay</strong></td><td>Ring the bell</td></tr>
+    <tr><td>05</td><td>Reef</td><td><strong>Sankey Deep</strong></td><td>Wake the reef</td></tr>
+    <tr><td>06</td><td>Volcano</td><td><strong>Savandurga Peak</strong></td><td>Read the instruments</td></tr>
+    <tr><td>07</td><td>Tundra</td><td><strong>Nandi Frost</strong></td><td>Ring the chime</td></tr>
+    <tr><td>08</td><td>Hollow</td><td><strong>Lalbagh Hollow</strong></td><td>Open the jars</td></tr>
+  </table>
+</section>
+
+<!-- ======================= 1 ======================= -->
+<section class="divider">
+  <span class="num">01</span>
+  <span class="eyebrow">Section One</span>
+  <h2>Executive summary</h2>
+  <p>What was built, and the one constraint that shaped every decision in it.</p>
+</section>
+
+<section class="sheet">
+  <p class="lead">
+    <em>A World in Your Palm</em> is a browser game in which a small explorer walks
+    around a complete spherical planet with eight distinct regions, each holding
+    one interactive “small wonder” to wake up.
+  </p>
+
+  <p>The defining constraint is that <strong>nothing is loaded</strong>. There is no
+  art pipeline, no <code>.glb</code>, no texture atlas, no <code>.mp3</code>. Every
+  tree, cottage, coral, character limb, footstep and chime is generated by
+  JavaScript at page load. The entire shippable product is one HTML file you could
+  email to someone.</p>
+
+  <p>That constraint drives the architecture. Because props are <em>functions</em>,
+  they can be authored as deep hierarchies of hundreds of tiny meshes — the only
+  sane way to write a windmill by hand — and then mechanically flattened before
+  rendering.</p>
+
+  <div class="callout">
+    <strong>The headline result.</strong> 6,348 meshes authored in code collapse
+    into 213 merged batches — a 96.6% reduction in draw work with no loss of
+    visual detail. That single function is what makes the approach viable.
+  </div>
+
+  <h3>Headline numbers</h3>
+  <div class="grid3">
+    <div class="stat"><span>Source</span><strong>7,293</strong><em>lines across 11 modules</em></div>
+    <div class="stat"><span>Functions</span><strong>191</strong><em>702 comment lines</em></div>
+    <div class="stat"><span>Asset files</span><strong>0</strong><em>everything generated</em></div>
+    <div class="stat"><span>Meshes authored</span><strong>6,348</strong><em>in JavaScript</em></div>
+    <div class="stat"><span>Merged into</span><strong>213</strong><em>batches — 3.4%</em></div>
+    <div class="stat"><span>Reaching the GPU</span><strong>437</strong><em>16 instanced</em></div>
+    <div class="stat"><span>Triangles</span><strong>269,719</strong><em>in the scene</em></div>
+    <div class="stat"><span>Nav graph</span><strong>4,842</strong><em>nodes over the globe</em></div>
+    <div class="stat"><span>Route planning</span><strong>~5 ms</strong><em>across the planet</em></div>
+  </div>
+
+  <table>
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Runtime</td><td>Browser, WebGL 2, no server</td></tr>
+    <tr><td>Language</td><td>JavaScript, ES5 style — no transpiler, no bundler</td></tr>
+    <tr><td>Dependency</td><td>Three.js r160 (UMD), vendored — the only one</td></tr>
+    <tr><td>Regions / wonders / collectibles</td><td>8 / 8 / 16</td></tr>
+    <tr><td>Collision volumes</td><td>125 spherical caps</td></tr>
+    <tr><td>Three.js classes used</td><td>54</td></tr>
+    <tr><td>Self-contained build</td><td>997 KB, one file</td></tr>
+  </table>
+</section>
+
+<!-- ======================= 2 & 3 ======================= -->
+<section class="divider">
+  <span class="num">02</span>
+  <span class="eyebrow">Section Two &amp; Three</span>
+  <h2>The brief, and how the reference was read</h2>
+  <p>What was asked, how it was interpreted, and what static analysis recovered
+  from a 916 KB minified file.</p>
+</section>
+
+<section class="sheet">
+  <h3>2. The brief</h3>
+  <div class="callout" style="border-left-color:var(--teal);background:#f1f6f3">
+    “Go through the link like a tester, gamer, senior game developer with 40+ years
+    of experience. Understand the game, don’t leave any single part of it, including
+    the map assets, everything. Now develop exactly the same kind of thing from the
+    observed analysis — just change some small wonder tasks and names, add some
+    extra features, but build it in a similar way, like a pro.”
+  </div>
+
+  <p>The reference was a published demo, <em>Little Planet — A Pocket Adventure</em>.
+  The instruction was explicitly <strong>not</strong> “copy the file” — it was
+  <em>understand it, then build your own to the same standard</em>. That framed the
+  work in three phases.</p>
+
+  <table class="compact">
+    <tr><th style="width:34mm">Phase</th><th>Goal</th></tr>
+    <tr><td><strong>1 — Analysis</strong></td><td>Dissect the reference down to its algorithms, not its pixels</td></tr>
+    <tr><td><strong>2 — Design</strong></td><td>Re-theme all content; decide what to add beyond the reference</td></tr>
+    <tr><td><strong>3 — Build</strong></td><td>Implement from scratch, verify empirically, ship</td></tr>
+  </table>
+
+  <h4>Interpretation decisions</h4>
+  <ul>
+    <li><strong>“Everything, including map assets”</strong> — the reference has no
+    asset files, so “assets” meant <em>the procedural generators that produce them</em>.
+    Analysis had to reach the generator level, not the screenshot level.</li>
+    <li><strong>“Change names and some wonder tasks”</strong> — all eight regions
+    renamed and all eight wonders redesigned with new mechanics, not new labels.</li>
+    <li><strong>“Like a pro”</strong> — a real project structure with a build step,
+    a test harness and documentation, rather than one 900 KB file.</li>
+  </ul>
+
+  <h3>3. Reverse-engineering the reference</h3>
+  <p>The reference ships as a single 916 KB HTML file: a minified Three.js bundle
+  plus roughly 133 KB of minified game code. It was analysed statically.</p>
+
+  <pre class="light"><span class="c">1.</span> Fetch the page source                <span class="c">→  916 KB, 4,545 lines</span>
+<span class="c">2.</span> Locate &lt;script&gt; boundaries          <span class="c">→  one giant IIFE</span>
+<span class="c">3.</span> Split vendor bundle from game code   <span class="c">→  isolated at offset ~760 KB</span>
+<span class="c">4.</span> Index every top-level declaration    <span class="c">→  ~200 minified symbols mapped</span>
+<span class="c">5.</span> Read each subsystem, renaming as understood</pre>
+
+  <p>Minified identifiers were reconstructed by reading their bodies and inferring
+  intent. For example <code>jd(s,t,e)</code> turned out to be a closed-form
+  great-circle-arc versus spherical-cap intersection test.</p>
+
+  <table class="compact zebra">
+    <tr><th style="width:34mm">Reference symbol</th><th>What it actually is</th></tr>
+    <tr><td><code>Un = 14</code></td><td>Planet radius; <code>Jd</code> is sea level at +0.025</td></tr>
+    <tr><td><code>ux(p)</code></td><td>Nearest-biome classification with sinusoidal border noise</td></tr>
+    <tr><td><code>Kd(p)</code></td><td>Terrain radius = blended per-biome elevation + detail octaves</td></tr>
+    <tr><td><code>Je(root)</code></td><td>The geometry baker — transform folding + colour-to-vertex-colour</td></tr>
+    <tr><td><code>jd(a,b,caps)</code></td><td>Closed-form arc-versus-cap visibility test</td></tr>
+    <tr><td><code>D3(from,to,…)</code></td><td>A* over a geodesic graph, then string-pulling</td></tr>
+    <tr><td><code>Qd</code> class</td><td>The spherical walker</td></tr>
+    <tr><td><code>vx()</code></td><td>Procedural character rig</td></tr>
+    <tr><td><code>Sx()</code></td><td>WebAudio synthesiser with per-biome footstep profiles</td></tr>
+  </table>
+
+  <h4>The five ideas worth keeping</h4>
+  <p>Analysis concluded that the demo’s quality comes from five decisions, all of
+  which were adopted and independently re-implemented.</p>
+  <ol>
+    <li><strong>Props are code, not data.</strong> Removes the entire asset pipeline.</li>
+    <li><strong>Author deep, then bake.</strong> Deep hierarchies for authoring;
+    flat merged geometry for rendering.</li>
+    <li><strong>Position is a unit normal, not a point.</strong> The character is
+    glued to a sphere by construction, so “fell through the world” cannot happen.</li>
+    <li><strong>Obstacles are spherical caps.</strong> Blocking becomes a dot
+    product; visibility becomes one <code>atan2</code>.</li>
+    <li><strong>Synthesise the audio.</strong> Per-material footsteps for free.</li>
+  </ol>
+  <p>Everything else — layout, content, palette, features — was designed fresh.</p>
+</section>
+
+<!-- ======================= 4 ======================= -->
+<section class="divider">
+  <span class="num">04</span>
+  <span class="eyebrow">Section Four</span>
+  <h2>Design decisions</h2>
+  <p>Eight regions, eight wonders, and six things the reference does not have.</p>
+</section>
+
+<section class="sheet">
+  <h3>The eight wonders</h3>
+  <p>Each is a toggle that changes the region’s state, returns a line of prose, and
+  is replayed on load so the world resumes as you left it.</p>
+
+  <table class="zebra compact">
+    <tr><th style="width:36mm">Region</th><th style="width:34mm">Action</th><th>Effect</th></tr>
+    <tr><td>Cubbon Woods</td><td>Light the camp</td><td>Campfire, three lamp posts, treehouse string lights, 34 fireflies</td></tr>
+    <tr><td>Hesaraghatta Fields</td><td>Start the windmill</td><td>Sails accelerate, 20 bees emerge, 22 flowerbeds bloom</td></tr>
+    <tr><td>Ramanagara Dunes</td><td>Turn the dial</td><td>A hidden oasis scales up from nothing — pool, palms, butterfly</td></tr>
+    <tr><td>Ulsoor Bay</td><td>Ring the bell</td><td>Bell swings; a sailboat sails a full circuit of the cove and returns</td></tr>
+    <tr><td>Sankey Deep</td><td>Wake the reef</td><td>Every coral material lights at once; a 16-fish school appears</td></tr>
+    <tr><td>Savandurga Peak</td><td>Read the instruments</td><td>All lava materials brighten and pulse; dish and telescope track</td></tr>
+    <tr><td>Nandi Frost</td><td>Ring the chime</td><td>Three aurora curtains unroll across the polar sky</td></tr>
+    <tr><td>Lalbagh Hollow</td><td>Open the jars</td><td>Nine jars and every glowing surface rise; 70 motes swarm</td></tr>
+  </table>
+
+  <h3>Six additions beyond the reference</h3>
+  <table class="compact">
+    <tr><th style="width:44mm">Addition</th><th>Why</th></tr>
+    <tr><td><strong>An eighth region</strong></td><td>The reference has seven; a night-themed region justified the bloom pipeline</td></tr>
+    <tr><td><strong>Real day/night cycle</strong></td><td>A directional sun on a tilted orbit — half the globe is genuinely dark and you can <em>walk</em> across the terminator</td></tr>
+    <tr><td><strong>Carried lantern with a point light</strong></td><td>Auto-lights at dusk and casts an actual pool of light — makes the night side worth visiting rather than merely survivable</td></tr>
+    <tr><td><strong>Companion creature</strong></td><td>Follows with its own spherical walker and pathfinding, so it never clips through trees</td></tr>
+    <tr><td><strong>16 collectible wisps</strong></td><td>A secondary exploration loop independent of the wonders</td></tr>
+    <tr><td><strong>Compass and photo mode</strong></td><td>Wayfinding, and a PNG export for sharing</td></tr>
+  </table>
+
+  <div class="callout">
+    <strong>A decision worth defending.</strong> The held sky settings — day, dusk,
+    night — do not pin a clock time. They solve for the sun position that produces
+    that sky <em>at the explorer’s current location</em>, and keep re-solving as you
+    walk. On a planet you can circumnavigate, “night” pinned to a clock would mean
+    broad daylight wherever you happened to be standing.
+  </div>
+</section>
+
+<!-- ======================= 5 & 6 ======================= -->
+<section class="divider">
+  <span class="num">05</span>
+  <span class="eyebrow">Section Five &amp; Six</span>
+  <h2>Tech stack and architecture</h2>
+  <p>One dependency, eleven modules, an acyclic dependency graph, and a deliberate
+  refusal to add a bundler.</p>
+</section>
+
+<section class="sheet">
+  <h3>5. Tech stack</h3>
+  <table class="compact">
+    <tr><th style="width:26mm">Layer</th><th style="width:40mm">Choice</th><th>Why</th></tr>
+    <tr><td>Rendering</td><td><strong>Three.js r160</strong> (UMD)</td><td>The only dependency. UMD, not ESM, so classic <code>&lt;script&gt;</code> tags work from <code>file://</code> with no server and no CORS</td></tr>
+    <tr><td>Graphics API</td><td><strong>WebGL 2</strong></td><td>Needed for multisampled half-float render targets</td></tr>
+    <tr><td>Language</td><td><strong>ES5-style JS</strong></td><td><code>var</code>, <code>function</code>, IIFE modules. No build step at runtime</td></tr>
+    <tr><td>Audio</td><td><strong>Web Audio API</strong></td><td>Oscillators, buffers, biquads, convolver — all synthesised</td></tr>
+    <tr><td>Persistence</td><td><strong>localStorage</strong></td><td>Key <code>tiny-world-save-v1</code></td></tr>
+    <tr><td>Input</td><td><strong>Pointer Events</strong></td><td>One code path for mouse, touch and pen</td></tr>
+    <tr><td>UI</td><td><strong>Plain HTML + CSS</strong></td><td><code>&lt;dialog&gt;</code> for panels; no framework</td></tr>
+  </table>
+
+  <h4>Three.js surface actually used — 54 classes</h4>
+  <div class="chip-row">
+    <span class="chip">Scene</span><span class="chip">Group</span><span class="chip">Object3D</span><span class="chip">Mesh</span><span class="chip">Points</span><span class="chip">InstancedMesh</span><span class="chip">PerspectiveCamera</span><span class="chip">OrthographicCamera</span><span class="chip">Raycaster</span><span class="chip">Color</span><span class="chip">Vector2</span><span class="chip">Vector3</span><span class="chip">Quaternion</span><span class="chip">Matrix4</span><span class="chip">MathUtils</span><span class="chip">BufferGeometry</span><span class="chip">BufferAttribute</span><span class="chip">Float32BufferAttribute</span><span class="chip">InstancedBufferAttribute</span><span class="chip">BoxGeometry</span><span class="chip">IcosahedronGeometry</span><span class="chip">OctahedronGeometry</span><span class="chip">SphereGeometry</span><span class="chip">CylinderGeometry</span><span class="chip">ConeGeometry</span><span class="chip">TorusGeometry</span><span class="chip">CircleGeometry</span><span class="chip">RingGeometry</span><span class="chip">TubeGeometry</span><span class="chip">ExtrudeGeometry</span><span class="chip">ShapeGeometry</span><span class="chip">Shape</span><span class="chip">CatmullRomCurve3</span><span class="chip">MeshStandardMaterial</span><span class="chip">MeshBasicMaterial</span><span class="chip">ShaderMaterial</span><span class="chip">PointsMaterial</span><span class="chip">DataTexture</span><span class="chip">AmbientLight</span><span class="chip">HemisphereLight</span><span class="chip">DirectionalLight</span><span class="chip">PointLight</span><span class="chip">WebGLRenderer</span><span class="chip">WebGLRenderTarget</span><span class="chip">HalfFloatType</span>
+  </div>
+  <p class="note">Notably <strong>no Three.js addons</strong>. <code>EffectComposer</code>
+  and <code>BufferGeometryUtils</code> are ESM-only and would have forced a bundler.
+  Geometry merging and the entire post-processing chain were written by hand
+  instead — about 150 lines in total.</p>
+
+  <h3>6. Architecture</h3>
+  <p>Eleven files load in numeric order as classic scripts. Each is an IIFE that
+  attaches one namespace to a global <code>TW</code> object. Load order
+  <strong>is</strong> the dependency order — a module can only use what is already
+  defined above it.</p>
+
+  <figure>
+  <pre>            vendor/three.min.js  <span class="c">→  window.THREE</span>
+                     │
+<span class="k">00-core.js</span>      TW.core      <span class="c">primitives, materials, bake()</span>
+   │               ▲    ▲    ▲
+<span class="k">10-nature.js</span>    TW.nature ──┘    │    │   <span class="c">trees, animals, water, fire</span>
+   │               ▲              │
+<span class="k">20-props.js</span>     TW.props ────────┘    │   <span class="c">buildings, machinery, boats</span>
+   │               ▲                   │
+<span class="k">40/41-biomes</span>    TW.biomes ─────────────┘   <span class="c">the eight authored regions</span>
+   │               ▲
+<span class="k">30-planet.js</span>    TW.planet                  <span class="c">terrain, regions, placement</span>
+<span class="k">50-walker.js</span>    TW.walk                    <span class="c">spherical motion + A*</span>
+<span class="k">60-explorer.js</span>  TW.explorer                <span class="c">character rig, companion</span>
+<span class="k">70-audio.js</span>     TW.audio                   <span class="c">synthesiser</span>
+<span class="k">80-render.js</span>    TW.render                  <span class="c">lighting, day/night, post</span>
+<span class="k">90-app.js</span>       TW.app                     <span class="c">input, cameras, HUD, loop</span></pre>
+  <figcaption>Module map. Dependency edges below were extracted from the source, not asserted.</figcaption>
+  </figure>
+
+  <table class="compact zebra">
+    <tr><th style="width:34mm">Module</th><th>Depends on</th></tr>
+    <tr><td><code>TW.core</code></td><td>— (only Three.js)</td></tr>
+    <tr><td><code>TW.nature</code></td><td><code>TW.core</code></td></tr>
+    <tr><td><code>TW.props</code></td><td><code>TW.core</code>, <code>TW.nature</code></td></tr>
+    <tr><td><code>TW.biomes</code></td><td><code>TW.core</code>, <code>TW.nature</code>, <code>TW.props</code></td></tr>
+    <tr><td><code>TW.planet</code></td><td><code>TW.core</code>, <code>TW.nature</code>, <code>TW.biomes</code></td></tr>
+    <tr><td><code>TW.walk</code></td><td>— (only Three.js)</td></tr>
+    <tr><td><code>TW.explorer</code></td><td><code>TW.core</code>, <code>TW.walk</code></td></tr>
+    <tr><td><code>TW.audio</code></td><td>— (only Web Audio)</td></tr>
+    <tr><td><code>TW.render</code></td><td><code>TW.core</code></td></tr>
+    <tr><td><code>TW.app</code></td><td>core, planet, walk, render, explorer, audio</td></tr>
+  </table>
+
+  <p>The graph is acyclic with one deliberate inversion: <code>TW.planet</code>
+  calls <code>TW.biomes.buildAll(ctx)</code> and hands it a context object, while
+  the biome files call back into <code>ctx.place()</code>, <code>ctx.path()</code>
+  and <code>ctx.wonder()</code>. <strong>Content does not know about spheres; the
+  planet does not know about content.</strong></p>
+
+  <div class="callout">
+    <strong>Why no bundler.</strong> Classic script tags load from
+    <code>file://</code> without a server, without CORS problems, and without a
+    toolchain. The cost is manual load ordering and no tree-shaking; the benefit is
+    that a contributor can edit a file, press reload, and see the change.
+    <code>build.mjs</code> recovers the single-file distribution when one is wanted.
+  </div>
+</section>
+
+<!-- ======================= 7 ======================= -->
+<section class="divider">
+  <span class="num">07</span>
+  <span class="eyebrow">Section Seven</span>
+  <h2>The engine, system by system</h2>
+  <p>The primitive kit, world generation, spherical motion, navigation, the
+  character, rendering and audio.</p>
+</section>
+
+<section class="sheet">
+  <h3>7.1 &nbsp;The primitive kit and the baker</h3>
+  <p>Six primitives build the entire world.</p>
+  <table class="compact">
+    <tr><th style="width:52mm">Function</th><th>Produces</th></tr>
+    <tr><td><code>box(p, x,y,z, w,h,d, col)</code></td><td>Axis-aligned box</td></tr>
+    <tr><td><code>rock(p, …, coarse)</code></td><td>Randomly tumbled icosahedron — every boulder, bush and blob</td></tr>
+    <tr><td><code>cone(p, …, rBot, h, seg, rTop)</code></td><td>Tapered cylinder; <code>rTop = 0</code> gives a cone</td></tr>
+    <tr><td><code>tube(…)</code></td><td><code>cone</code> with equal radii</td></tr>
+    <tr><td><code>link(p, a, b, r, col)</code></td><td>A cylinder <em>between two points</em> — ropes, branches, struts</td></tr>
+    <tr><td><code>poly(verts, faces, colors)</code></td><td>Raw triangle soup for anything bespoke</td></tr>
+  </table>
+
+  <h4>bake() — the load-bearing function</h4>
+  <p>For every static, opaque, single-material mesh under a root:</p>
+  <ol>
+    <li>Fold the world transform into the vertex positions.</li>
+    <li>Fold the flat material colour into a <strong>vertex-colour attribute</strong>,
+    and swap in a shared white <code>vertexColors</code> material.
+    <em>This is the trick</em> — it lets meshes of different colours merge into one
+    geometry.</li>
+    <li>Concatenate into one buffer per
+    <code>(material, castShadow, receiveShadow)</code> bucket.</li>
+  </ol>
+  <p>Anything marked <code>userData.dynamic</code> — and its whole subtree — is
+  skipped, so animated joints keep their own transforms.</p>
+
+  <div class="grid3">
+    <div class="stat"><span>Authored</span><strong>6,348</strong><em>meshes</em></div>
+    <div class="stat"><span>Merged into</span><strong>213</strong><em>batches</em></div>
+    <div class="stat"><span>Groups pruned</span><strong>2,217</strong><em>empty husks</em></div>
+  </div>
+
+  <p class="note"><strong>Determinism.</strong> <code>rand(a,b)</code> is a seeded
+  LCG. Nothing in generation may call <code>Math.random()</code>, so the planet is
+  byte-identical on every machine and in every screenshot.</p>
+
+  <h3>7.2 &nbsp;Generating a world</h3>
+  <p>Eight biome centres are placed by latitude and longitude. Any point on the
+  sphere belongs to the nearest centre — but the distance metric is perturbed:</p>
+  <pre>score = dot(centre, p) + 0.018 · sin(p.x·9 + i·2.3) · sin(p.y·8 − p.z·6 + i·0.6)</pre>
+  <p>Without the noise term the borders would be clean great-circle arcs and look
+  manufactured. <code>classify()</code> also returns the runner-up and the margin,
+  which lets elevation blend across a border instead of forming a cliff.</p>
+
+  <p>The terrain mesh is <code>IcosahedronGeometry(14, 40)</code> — 100,860
+  vertices. Each face is displaced, classified, and given a per-face colour with a
+  small random tint. Flat-shaded, so the facets <em>are</em> the aesthetic.</p>
+
+  <h4>The placement context</h4>
+  <p>Biome files never touch spheres. They receive:</p>
+  <table class="compact zebra">
+    <tr><th style="width:56mm">API</th><th>Purpose</th></tr>
+    <tr><td><code>ctx.place(id, x, z, build, opts)</code></td><td>Drop a prop at local metres; handles the tangent frame</td></tr>
+    <tr><td><code>ctx.path(id, points, width, color)</code></td><td>Drape a footpath over the terrain</td></tr>
+    <tr><td><code>ctx.block(id, x, z, radius)</code></td><td>Register a collision cap</td></tr>
+    <tr><td><code>ctx.wonder(spec)</code></td><td>Register an interactive landmark</td></tr>
+    <tr><td><code>ctx.wisp(id, x, z)</code></td><td>Register a collectible</td></tr>
+    <tr><td><code>ctx.sky(build)</code></td><td>A group whose local frame <em>is</em> world space (the aurora)</td></tr>
+    <tr><td><code>ctx.tick(fn)</code></td><td>Per-frame callback outside the prop hierarchy</td></tr>
+  </table>
+
+  <h3>7.3 &nbsp;Walking on a sphere</h3>
+  <p>The explorer has <strong>no position</strong>. It has a unit <code>normal</code>
+  — the direction from the planet centre to its feet — and a unit tangent
+  <code>forward</code>. Moving is rotating the normal along a great circle:</p>
+  <pre><span class="k">advance</span>(from, dir, distance, radius):
+    t = <span class="k">tangent</span>(dir, from)
+    a = distance / radius
+    <span class="k">return</span> from·cos(a) + t·sin(a)      <span class="c">// normalised</span></pre>
+
+  <p>Height comes from <code>surfaceRadius(normal)</code>, so the character is
+  welded to the terrain by construction. There is no gravity solve and no ground
+  raycast. After each move the facing vectors are <strong>parallel-transported</strong>
+  along the step with a quaternion built from the before/after normals, so they
+  stay tangent without drift.</p>
+
+  <p>Obstacles are spherical caps. Being inside one is
+  <code>dot(p, cap.normal) &gt; cos(angularRadius)</code>. <code>resolve()</code>
+  pushes a point back out along the tangent, three iterations, every frame.</p>
+
+  <h3>7.4 &nbsp;Navigation</h3>
+  <p>Along the great circle from <em>a</em> to <em>b</em>, the dot product with a
+  cap centre is:</p>
+  <pre>f(t) = h·cos t + d·sin t  =  R·cos(t − φ)     <span class="c">where R = hypot(h,d), φ = atan2(d,h)</span></pre>
+  <p>So the closest approach to any obstacle is <strong>one <code>atan2</code></strong>
+  — no marching, no sampling. This is what makes planet-scale A* cheap enough to run
+  inside a click handler.</p>
+
+  <table class="compact">
+    <tr><th style="width:46mm">Stage</th><th>Detail</th></tr>
+    <tr><td>Graph</td><td><code>IcosahedronGeometry(1, 21)</code> deduplicated to <strong>4,842 nodes</strong>. Nodes inside an obstacle are closed; edges survive only if the arc between them is clear</td></tr>
+    <tr><td>Caching</td><td>Built once, cached on the collider array via a <code>WeakMap</code>, and <strong>pre-warmed at load</strong> so the first click never pays the ~76 ms cost</td></tr>
+    <tr><td>Search</td><td>A* with a great-circle heuristic and a binary heap, using a virtual goal node so multiple entry portals relax cheaply</td></tr>
+    <tr><td>Smoothing</td><td><strong>String-pulling</strong>: from each anchor, skip to the furthest waypoint still in clear line of sight. A staircase becomes 2–5 long natural legs</td></tr>
+  </table>
+
+  <div class="callout">
+    <strong>Two-tier design, verified.</strong> If A* returns <code>null</code> — for
+    instance if the walker is standing inside a cap — the walker falls back to
+    reactive steering: head toward the target, and when an obstacle is in the way,
+    commit to one side and slide. Measured: from a blocked start with
+    <code>_route === null</code>, the walker escaped the cap and covered
+    <strong>10.9 m in 2 simulated seconds</strong>.
+  </div>
+
+  <h3>7.5 &nbsp;The character</h3>
+  <p>A real skeleton of nested pivots — no skinning and no animation data.</p>
+  <pre>root
+└── body                       <span class="c">whole-body bob, lean, roll</span>
+    ├── torso                  <span class="c">coat, pockets, straps, chest compass</span>
+    │   └── pack               <span class="c">bedroll, mug, map, buckles</span>
+    ├── legL / legR
+    │   └── thigh → knee → ankle
+    ├── armL / armR
+    │   └── shoulder → elbow → hand
+    │       └── lantern        <span class="c">left hand — swings, lights at dusk</span>
+    └── head
+        ├── eyes ×2            <span class="c">blink on a 5.4 s cycle</span>
+        ├── hat                <span class="c">brim, seams, goggles on the crown</span>
+        └── scarf → tail       <span class="c">trails with movement</span></pre>
+
+  <p>The walk cycle is a handful of sines driven by <strong>distance travelled</strong>,
+  not wall time — so the gait always matches the speed. Five blend weights chase
+  their targets exponentially and layer poses on top of each other. Each joint is
+  baked individually with <code>keepRootLive</code>, so a joint’s own static meshes
+  merge while its children stay independently animatable.</p>
+
+  <p>The companion owns a <strong>full <code>Walker</code></strong> — it pathfinds
+  around obstacles exactly as the player does, follows when the gap exceeds 2.4 m,
+  and sits down when it closes to 1.3 m.</p>
+
+  <h3>7.6 &nbsp;Lighting and the post chain</h3>
+  <p>The sun runs on a clean tilted great circle,
+  <code>sunDir(t) = A·cos 2πt + B·sin 2πt</code>. Keeping it analytic is what makes
+  the held sky settings work: since
+  <code>dot(n, sunDir(t)) = R·cos(2πt − φ)</code>, the time that produces a given
+  sun elevation at a given point is <strong>one <code>acos</code></strong>.</p>
+
+  <pre><span class="k">solveTimeFor</span>(normal, target):
+    a = normal·A ; b = normal·B
+    R = hypot(a, b) ; φ = atan2(b, a)
+    <span class="k">return</span> (φ + acos(clamp(target / R, −1, 1))) / 2π</pre>
+
+  <p>A full day is 420 s. Local daylight is
+  <code>clamp(dot(normal, sunDir)·2.6 + 0.42, 0, 1)</code> and drives ambient level
+  and colour, hemisphere light, moon fill, star opacity, atmosphere tint, the night
+  colour grade, and the lantern.</p>
+
+  <figure>
+  <pre>scene ──► HDR half-float target (4× MSAA)
+            │
+            ├─► bright pass (soft-knee threshold) ──► ½-res
+            │        └─► blur H → blur V → blur H(×2.4) → blur V(×2.4)
+            │
+            └─► composite:  scene + bloom
+                            × exposure
+                            night colour grade
+                            Khronos PBR Neutral tone map
+                            vignette
+                            sRGB encode
+                            premultiplied alpha ──► screen</pre>
+  <figcaption>The post-processing chain — hand-written, no Three.js addons.</figcaption>
+  </figure>
+
+  <p><strong>Explorer occlusion.</strong> Props between the camera and the explorer
+  dither away using a fixed 4×4 Bayer pattern, injected into every opaque standard
+  material via <code>onBeforeCompile</code>. Fixed rather than noise — a noise
+  pattern sparkles when you stand still.</p>
+
+  <p><strong>Graceful degradation.</strong> Without WebGL 2 the whole chain is
+  replaced by a direct render with ACES tone mapping. Below 40 fps the pixel ratio
+  drops; below that again, bloom and soft shadows are dropped.</p>
+
+  <h3>7.7 &nbsp;The synthesiser</h3>
+  <p>No audio files. Voices are built per event and self-dispose via
+  <code>onended</code>.</p>
+  <table class="compact zebra">
+    <tr><th style="width:30mm">Sound</th><th>Construction</th></tr>
+    <tr><td>Footstep</td><td>Band-limited noise burst (lowpass sweep + highpass) + low sine “thud”</td></tr>
+    <tr><td>Splash</td><td>Longer, brighter burst with a higher highpass</td></tr>
+    <tr><td>Wind</td><td>One looping brown-noise buffer through a lowpass whose corner follows the region</td></tr>
+    <tr><td>Discovery</td><td>Pentatonic tone, one note per region — nothing can sound wrong</td></tr>
+    <tr><td>Room</td><td>Synthetic impulse response through a <code>ConvolverNode</code></td></tr>
+  </table>
+  <p>Per-region ground profiles tune filter cutoff, duration, level and thud pitch —
+  sand is long and bright (2600 Hz, 145 ms), volcanic rock is short and hard
+  (3400 Hz, 45 ms).</p>
+</section>
+
+<!-- ======================= 8 & 9 ======================= -->
+<section class="divider">
+  <span class="num">08</span>
+  <span class="eyebrow">Section Eight &amp; Nine</span>
+  <h2>Call graph and the anatomy of one frame</h2>
+  <p>What calls what, once at load and then sixty times a second.</p>
+</section>
+
+<section class="wide">
+  <h3>8.1 &nbsp;Build-time flow — once, at load</h3>
+  <pre><span class="k">90-app.js</span>
+   │
+   ├─► TW.render.<span class="k">createLighting</span>(scene)                 <span class="c">sun, moon, ambient, hemisphere</span>
+   │
+   ├─► TW.planet.<span class="k">build</span>({terrainDetail:40, scatter:1650})
+   │        ├─► IcosahedronGeometry(14,40) → displace → classify → vertex colours
+   │        ├─► sea shell (IcosahedronGeometry(14.025, 34))
+   │        │
+   │        ├─► TW.biomes.<span class="k">buildAll</span>(ctx) ─────────┐  <span class="c">eight region builders</span>
+   │        │      ├─ ctx.place(id,x,z,build) ◄────┤  <span class="c">each calling…</span>
+   │        │      ├─ ctx.path / block / wonder    │
+   │        │      └─ build(g) calls:              │
+   │        │            TW.nature.pine/palm/…     │  <span class="c">← 10-nature.js</span>
+   │        │            TW.props.cottage/well/…   │  <span class="c">← 20-props.js</span>
+   │        │               └─ TW.core.box/rock/cone/link/poly
+   │        │
+   │        ├─► trails between regions · 1,650-point Fibonacci scatter
+   │        ├─► clouds (1 InstancedMesh) · wonder markers · wisps
+   │        ├─► TW.core.<span class="k">bake</span>(propRoot)        <span class="c">6,348 meshes → 213 batches</span>
+   │        └─► <span class="k">pruneEmpty</span>(propRoot)        <span class="c">2,217 groups removed</span>
+   │
+   ├─► TW.planet.<span class="k">buildSky</span>(scene)              <span class="c">stars + atmosphere rim shader</span>
+   ├─► TW.render.<span class="k">installOcclusion</span>(…)         <span class="c">patches every opaque material</span>
+   ├─► TW.explorer.<span class="k">create</span>()                  <span class="c">rig, each joint baked</span>
+   ├─► <span class="k">new</span> TW.walk.<span class="k">Walker</span>({…})
+   ├─► TW.explorer.<span class="k">createCompanion</span>({…})       <span class="c">owns its own Walker</span>
+   ├─► TW.render.<span class="k">createPost</span>(…)               <span class="c">HDR target + bloom + composite</span>
+   ├─► lighting.<span class="k">startAt</span>(spawn, 0.66)          <span class="c">open in daylight where we stand</span>
+   └─► TW.walk.<span class="k">findRoute</span>(…)                  <span class="c">pre-warm the 4,842-node graph</span></pre>
+
+  <h3 class="pb">8.2 &nbsp;Per-frame flow</h3>
+  <pre><span class="k">frame</span>(now)
+   │
+   ├─ camera.matrixWorld ─► cameraRight / cameraUp ─► TW.walk.<span class="k">tangent</span>()
+   │
+   ├─ walker.<span class="k">update</span>(dt, {x, y, forward, right, running})
+   │     ├─ <span class="k">_steer</span>()          <span class="c">only when auto-walking; route or reactive dodge</span>
+   │     ├─ <span class="k">advance</span>()         <span class="c">great-circle step</span>
+   │     ├─ <span class="k">resolve</span>()         <span class="c">push out of collision caps</span>
+   │     └─ parallel-transport the forward vectors
+   │
+   ├─ explorer.<span class="k">update</span>(dt, {time, speed, swimming, running, airborne, interacting})
+   │     └─ ~40 joint rotations from blended sines
+   │
+   ├─ companion.<span class="k">update</span>(dt, walker.normal, time)   <span class="c">its own Walker</span>
+   │
+   ├─ lighting.<span class="k">update</span>(dt, walker.normal)
+   │     ├─ auto: advance timeOfDay   │  held: <span class="k">solveTimeFor</span>(normal, target)
+   │     └─ ambient / hemi / moon / sun colour from local daylight
+   │
+   ├─ bodies.<span class="k">update</span>(sunDir, camera)   ·   post uniforms ◄─ night, bloom
+   ├─ explorer.<span class="k">setLanternLit</span>(night &gt; 0.42) + point-light intensity
+   │
+   ├─ <span class="k">updateCamera</span>(dt)   ·   <span class="k">updateHud</span>()   ·   <span class="k">checkWisps</span>()
+   ├─ TW.core.<span class="k">tickAll</span>(animTime)      <span class="c">86 registered animation callbacks</span>
+   ├─ world.<span class="k">update</span>(animTime)         <span class="c">markers, wisps, clouds, wonder state</span>
+   ├─ confetti integration   ·   audio.<span class="k">update</span>(dt, {speed, swimming, biome, night})
+   │
+   ├─ renderer.shadowMap.needsUpdate    <span class="c">on a time budget, not every frame</span>
+   ├─ post.<span class="k">render</span>()                    <span class="c">scene → bloom → composite → screen</span>
+   ├─ adaptive quality check            <span class="c">wall-clock fps, two downgrade steps</span>
+   └─ telemetry publish                 <span class="c">every 0.25 s of simulation time</span></pre>
+
+  <h3>9. &nbsp;Anatomy of one frame</h3>
+  <table class="compact zebra">
+    <tr><th class="num" style="width:8mm">#</th><th style="width:44mm">Step</th><th>Notes</th></tr>
+    <tr><td class="num">1</td><td>requestAnimationFrame</td><td><code>dt</code> clamped to 50 ms so a stall cannot teleport the player</td></tr>
+    <tr><td class="num">2</td><td>Bail if hidden</td><td>A background tab does nothing</td></tr>
+    <tr><td class="num">3</td><td>Build tangent basis</td><td>Camera axes projected onto the explorer’s tangent plane</td></tr>
+    <tr><td class="num">4</td><td>Read input</td><td>Keys, latched taps, joystick — zeroed while a dialog is open</td></tr>
+    <tr><td class="num">5</td><td>walker.update()</td><td>Steer → advance → resolve → transport → turn → gravity</td></tr>
+    <tr><td class="num">6</td><td>Place explorer</td><td><code>normal × (surfaceRadius + height)</code></td></tr>
+    <tr><td class="num">7</td><td>Animate</td><td>Character joints, companion, occlusion uniform</td></tr>
+    <tr><td class="num">8</td><td>Lighting</td><td>Sun position, local daylight, all derived colours</td></tr>
+    <tr><td class="num">9</td><td>Camera</td><td>Lerp position, look-at and up vector</td></tr>
+    <tr><td class="num">10</td><td>HUD</td><td>Nearby wonder, region change, compass bearing</td></tr>
+    <tr><td class="num">11</td><td>World ticks</td><td>86 animation callbacks + world updaters</td></tr>
+    <tr><td class="num">12</td><td>Audio</td><td>Footstep accumulator, wind filter targets</td></tr>
+    <tr><td class="num">13</td><td>Shadows</td><td>Budgeted: 45 ms moving, 180 ms idle</td></tr>
+    <tr><td class="num">14</td><td>Render</td><td>Scene → HDR target → 5 bloom passes → composite</td></tr>
+    <tr><td class="num">15</td><td>Adaptive quality</td><td>Wall-clock fps, two downgrade steps</td></tr>
+    <tr><td class="num">16</td><td>Telemetry</td><td>JSON state for the test harness</td></tr>
+  </table>
+</section>
+
+<!-- ======================= 10 ======================= -->
+<section class="divider">
+  <span class="num">10</span>
+  <span class="eyebrow">Section Ten</span>
+  <h2>Build and run — every command</h2>
+  <p>All commands run from the project root in the VS Code terminal (PowerShell).</p>
+</section>
+
+<section class="sheet">
+  <h3>Just play it</h3>
+  <p>No build, no server, no install.</p>
+  <pre><span class="c"># Windows — open in the default browser</span>
+start index.html</pre>
+  <p>Or paste <code>file:///D:/GAMES/tiny_world/index.html</code> into any browser,
+  or double-click <code>index.html</code>.</p>
+
+  <h3>Local server — live reload, and phone testing</h3>
+  <pre>live-server                  <span class="c"># → http://127.0.0.1:8080, reloads on save</span>
+live-server --port=3000      <span class="c"># different port</span>
+live-server --no-browser     <span class="c"># don't open a tab</span></pre>
+  <p>For a phone on the same Wi-Fi:</p>
+  <pre>live-server --host=0.0.0.0 --port=8080
+ipconfig | Select-String IPv4     <span class="c"># find your PC's address</span>
+<span class="c"># then open http://&lt;that-IP&gt;:8080 on the phone</span></pre>
+  <p class="note">Allow the Windows Firewall prompt on <strong>Private</strong>
+  networks. If <code>live-server</code> is not on PATH, <code>npx live-server</code>
+  works identically.</p>
+
+  <h3>Build the single file</h3>
+  <pre>node build.mjs</pre>
+  <p>Inlines <code>vendor/three.min.js</code> and all 11 sources into
+  <code>dist/tiny-world.html</code> — 997 KB, works offline from a USB stick. Run it
+  after editing any source.</p>
+
+  <h3>Verification harness</h3>
+  <pre><span class="c"># one-time install</span>
+cd tools
+npm install
+cd ..
+
+<span class="c"># then</span>
+node tools/smoke.mjs                        <span class="c"># loads and renders?      ~30 s</span>
+node tools/smoke.mjs dist/tiny-world.html   <span class="c"># same, against the build</span>
+node tools/metrics.mjs                      <span class="c"># the numbers in this report</span>
+node tools/playthrough.mjs                  <span class="c"># full acceptance run     ~5 min</span></pre>
+  <p>Every script exits non-zero on failure, so they drop straight into CI. They
+  need Chrome or Edge already installed — set <code>CHROME_PATH</code> if it is
+  somewhere unusual.</p>
+
+  <h3>Regenerate this report</h3>
+  <pre>node tools/make-pdf.mjs      <span class="c"># docs/report.html → the PDF you are reading</span></pre>
+
+  <h3>Command reference</h3>
+  <table class="compact zebra">
+    <tr><th style="width:56mm">Command</th><th style="width:26mm">Where</th><th>Purpose</th></tr>
+    <tr><td><code>start index.html</code></td><td>project root</td><td>Play</td></tr>
+    <tr><td><code>live-server</code></td><td>project root</td><td>Dev server with live reload</td></tr>
+    <tr><td><code>live-server --host=0.0.0.0</code></td><td>project root</td><td>Expose to phones on the LAN</td></tr>
+    <tr><td><code>node build.mjs</code></td><td>project root</td><td>Rebuild <code>dist/tiny-world.html</code></td></tr>
+    <tr><td><code>npm install</code></td><td><code>tools/</code></td><td>Install the harness (once)</td></tr>
+    <tr><td><code>node tools/smoke.mjs</code></td><td>project root</td><td>Fast health check</td></tr>
+    <tr><td><code>node tools/metrics.mjs</code></td><td>project root</td><td>Measure the world</td></tr>
+    <tr><td><code>node tools/playthrough.mjs</code></td><td>project root</td><td>Full acceptance run</td></tr>
+    <tr><td><code>node tools/make-pdf.mjs</code></td><td>project root</td><td>Rebuild this PDF</td></tr>
+    <tr><td><code>git add -A ; git commit ; git push</code></td><td>project root</td><td>Publish</td></tr>
+  </table>
+</section>
+
+<!-- ======================= 11 & 12 ======================= -->
+<section class="divider">
+  <span class="num">11</span>
+  <span class="eyebrow">Section Eleven &amp; Twelve</span>
+  <h2>Testing and performance</h2>
+  <p>How a graphical, stateful game is verified without mocks — and what it costs
+  to draw.</p>
+</section>
+
+<section class="sheet">
+  <h3>11. Testing and verification</h3>
+  <p>The game is verified by <strong>driving the real build in a real browser</strong>.
+  Two deliberate hooks make that possible: an <code>&lt;output id="telemetry"&gt;</code>
+  element carrying full runtime state as JSON, and a <code>TW.app</code> namespace
+  with live handles to the renderer, scene, walker, world and lighting.</p>
+
+  <div class="callout">
+    <strong>A lesson worth recording.</strong> The harness first read
+    <em>everything</em> from telemetry and produced false failures. Telemetry
+    refreshes on the <strong>simulation</strong> clock, which crawls under software
+    rasterisation. Anything time-sensitive must read live state through
+    <code>TW.app</code>; telemetry is for the human-facing summary and for checking
+    that the channel itself works.
+  </div>
+
+  <table class="compact zebra">
+    <tr><th style="width:52mm">Check</th><th>Method</th></tr>
+    <tr><td>Loads and renders</td><td>Wait for <code>canvas.dataset.ready</code></td></tr>
+    <tr><td>No errors</td><td><code>pageerror</code>, <code>console.error</code>, <code>requestfailed</code> all fail the run</td></tr>
+    <tr><td>All 8 wonders</td><td>Teleport, <code>interact()</code>, assert the found count</td></tr>
+    <tr><td>All 8 regions</td><td>Assert <code>regions === 8</code></td></tr>
+    <tr><td>Sky resolves locally</td><td>Poll until daylight settles; assert day &gt; 0.9, night &lt; 0.1</td></tr>
+    <tr><td>Swimming</td><td>Assert <code>walker.swimming</code> in the reef</td></tr>
+    <tr><td>Cross-planet navigation</td><td><code>findRoute()</code> across the globe</td></tr>
+    <tr><td>Auto-walk arrival</td><td>Poll until <code>walker.target</code> clears</td></tr>
+    <tr><td>Save / restore</td><td>Reload, assert 8 wonders return</td></tr>
+    <tr><td>Spawn in daylight</td><td>Assert <code>daylight ≥ 0.5</code> after reload</td></tr>
+    <tr><td>Mobile layout</td><td>Emulate iPhone; assert no overflow and no overlaps</td></tr>
+    <tr><td>Touch joystick</td><td>Synthetic touch drag; assert distance walked</td></tr>
+  </table>
+
+  <h4>Latest result — both targets pass</h4>
+  <pre class="light">PLAYTHROUGH — index.html          PLAYTHROUGH — dist/tiny-world.html
+  wonders activated  8 / 8           wonders activated  8 / 8
+  regions visited    8 / 8           regions visited    8 / 8
+  sky: day / dusk    1.00 / 0.495    sky: day / dusk    1.00 / 0.547
+  sky: night         0.00            sky: night         0.00
+  swims in the reef  true            swims in the reef  true
+  cross-planet route 4 wp, 5.2 ms    cross-planet route 4 wp, 4.6 ms
+  auto-walk arrives  true            auto-walk arrives  true
+  photo mode         true            photo mode         true
+  save survives      8 wonders       save survives      8 wonders
+  problems: none                     problems: none</pre>
+
+  <div class="callout" style="border-left-color:#c0603f;background:#fbf1ec">
+    <strong>Known limitation.</strong> Headless Chrome falls back to SwiftShader, a
+    software rasteriser, so the harness runs at roughly 2–3 fps. That is fine for
+    correctness and says <em>nothing</em> about real frame rate. The adaptive-quality
+    ladder was verified to trigger, but performance on real hardware has not been
+    measured here and should be checked on target devices.
+  </div>
+
+  <h3 class="pb">12. Performance engineering</h3>
+  <table class="compact">
+    <tr><th>Measure</th><th class="num">Before</th><th class="num">After</th><th>How</th></tr>
+    <tr><td>Meshes in scene</td><td class="num">926</td><td class="num"><strong>437</strong></td><td>Instancing + sub-part baking</td></tr>
+    <tr><td>Draw calls (follow view)</td><td class="num">438</td><td class="num"><strong>~200</strong></td><td>Same</td></tr>
+    <tr><td>Scene-graph groups</td><td class="num">1,527</td><td class="num"><strong>353</strong></td><td><code>pruneEmpty()</code> after baking</td></tr>
+  </table>
+
+  <ul>
+    <li><strong>Smoke and flames → <code>InstancedMesh</code>.</strong> Puffs now fade
+    by shrinking rather than by per-instance alpha, which instancing cannot express.</li>
+    <li><strong>Animals baked per part.</strong> One critter went from ~8 meshes to 2.</li>
+    <li><strong>Kelp rebuilt as a single swept ribbon</strong> instead of a
+    five-segment stack: 26 fronds, 26 meshes.</li>
+    <li><strong>Clouds → one <code>InstancedMesh</code></strong> for all 52 lumps.</li>
+    <li><strong>Flower beds and the oasis baked</strong>, saving ~150 meshes in one region.</li>
+  </ul>
+
+  <table class="compact zebra">
+    <tr><th style="width:56mm">Runtime technique</th><th>Effect</th></tr>
+    <tr><td>Shadow map on a time budget</td><td>Re-rendered every 45 ms moving, 180 ms idle — not every frame</td></tr>
+    <tr><td>Bloom at half resolution</td><td>5 fullscreen passes at ¼ the pixel cost</td></tr>
+    <tr><td>Pixel-ratio cap</td><td><code>min(dpr, sqrt(2.3M / (w·h)))</code> — targets a pixel budget, not a ratio</td></tr>
+    <tr><td>Navigation graph cached</td><td><code>WeakMap</code> on the collider array; built once, pre-warmed</td></tr>
+    <tr><td>Adaptive quality</td><td>Two downgrade steps below 40 fps on the <strong>wall</strong> clock</td></tr>
+  </table>
+</section>
+
+<!-- ======================= 13 ======================= -->
+<section class="divider">
+  <span class="num">13</span>
+  <span class="eyebrow">Section Thirteen</span>
+  <h2>Bugs found and fixed</h2>
+  <p>Every one was caught by automated testing or by inspecting rendered output.
+  None were found by reading the code.</p>
+</section>
+
+<section class="wide">
+  <table class="zebra compact">
+    <tr>
+      <th class="num" style="width:7mm">#</th>
+      <th style="width:34mm">Bug</th>
+      <th style="width:38mm">Symptom</th>
+      <th style="width:48mm">Root cause</th>
+      <th>Fix</th>
+    </tr>
+    <tr><td class="num">1</td><td><strong>fps counter lied</strong></td><td>Always reported ~20 fps</td><td>Averaged the <em>clamped</em> <code>dt</code> (max 50 ms), so it could never report below 20</td><td>Measure against <code>performance.now()</code></td></tr>
+    <tr><td class="num">2</td><td><strong>“Night” showed daylight</strong></td><td>Holding night left the sky bright</td><td>Phase pinned a clock time, not a local sun elevation</td><td>Solve <code>solveTimeFor()</code> analytically each frame</td></tr>
+    <tr><td class="num">3</td><td><strong>Black background</strong></td><td>CSS page gradient never visible</td><td>Composite wrote opaque alpha over the whole canvas</td><td>Carry scene coverage into premultiplied output alpha</td></tr>
+    <tr><td class="num">4</td><td><strong>Could open at night</strong></td><td>Spawn sometimes in darkness</td><td><code>timeOfDay</code> initialised to a constant</td><td><code>startAt(spawn, 0.66)</code> solves for morning at spawn</td></tr>
+    <tr><td class="num">5</td><td><strong>Lava floated</strong></td><td>Flows hovered at the far end</td><td>One prop anchor spanning 6 m of a 20° slope</td><td>Rebuilt with <code>ctx.path()</code>, which drapes over terrain</td></tr>
+    <tr><td class="num">6</td><td><strong>Crater props buried</strong></td><td>Rim rocks sank into the ground</td><td>Same single-anchor problem inside the crater</td><td>Flattened the crater floor in the elevation function</td></tr>
+    <tr><td class="num">7</td><td><strong>Aurora flew off</strong></td><td>Flat sheets floating in space</td><td>Built in a prop’s local frame, ignoring curvature</td><td>Rebuilt in world space via <code>ctx.sky()</code></td></tr>
+    <tr><td class="num">8</td><td><strong>First click stuttered</strong></td><td>~76 ms hitch on the first auto-walk</td><td>Navigation graph built lazily</td><td>Pre-warm at load</td></tr>
+    <tr><td class="num">9</td><td><strong>Sun drew through the planet</strong></td><td>Sky discs visible through terrain</td><td><code>depthTest: false</code> on the billboards</td><td>Enabled depth testing</td></tr>
+    <tr><td class="num">10</td><td><strong>Harness false negatives</strong></td><td>Tests failed on working features</td><td>Read telemetry, which runs on the simulation clock</td><td>Read live state via <code>TW.app</code></td></tr>
+  </table>
+</section>
+
+<!-- ======================= 14 ======================= -->
+<section class="divider">
+  <span class="num">14</span>
+  <span class="eyebrow">Section Fourteen</span>
+  <h2>File reference</h2>
+  <p>Where everything lives, and how big it is.</p>
+</section>
+
+<section class="sheet">
+  <table class="compact zebra">
+    <tr><th style="width:38mm">File</th><th class="num" style="width:14mm">Lines</th><th class="num" style="width:10mm">Fns</th><th class="num" style="width:16mm">Comments</th><th>Contents</th></tr>
+    <tr><td><code>index.html</code></td><td class="num">395</td><td class="num">—</td><td class="num">—</td><td>Page, interface, all CSS, responsive and touch layout</td></tr>
+    <tr><td><code>src/00-core.js</code></td><td class="num">401</td><td class="num">24</td><td class="num">16%</td><td>Primitives, materials, RNG, <code>bake()</code>, merging</td></tr>
+    <tr><td><code>src/10-nature.js</code></td><td class="num">572</td><td class="num">23</td><td class="num">7%</td><td>Trees, plants, rocks, water, fire, motes, animals</td></tr>
+    <tr><td><code>src/20-props.js</code></td><td class="num">569</td><td class="num">26</td><td class="num">7%</td><td>Shelters, fences, lanterns, boats, bridges, machinery</td></tr>
+    <tr><td><code>src/30-planet.js</code></td><td class="num">767</td><td class="num">22</td><td class="num">11%</td><td>Terrain, regions, placement context, scatter, sky</td></tr>
+    <tr><td><code>src/40-biomes-a.js</code></td><td class="num">813</td><td class="num">5</td><td class="num">11%</td><td>Cubbon Woods, Hesaraghatta Fields, Ramanagara Dunes, Ulsoor Bay</td></tr>
+    <tr><td><code>src/41-biomes-b.js</code></td><td class="num">890</td><td class="num">10</td><td class="num">11%</td><td>Sankey Deep, Savandurga Peak, Nandi Frost, Lalbagh Hollow</td></tr>
+    <tr><td><code>src/50-walker.js</code></td><td class="num">592</td><td class="num">12</td><td class="num">12%</td><td>Spherical motion, caps, A*, string-pulling</td></tr>
+    <tr><td><code>src/60-explorer.js</code></td><td class="num">592</td><td class="num">13</td><td class="num">9%</td><td>Character rig, animation, companion, waypoint marker</td></tr>
+    <tr><td><code>src/70-audio.js</code></td><td class="num">433</td><td class="num">19</td><td class="num">6%</td><td>Web Audio synthesiser</td></tr>
+    <tr><td><code>src/80-render.js</code></td><td class="num">611</td><td class="num">15</td><td class="num">12%</td><td>Lighting, day/night, bloom, tone mapping, occlusion</td></tr>
+    <tr><td><code>src/90-app.js</code></td><td class="num">1,053</td><td class="num">22</td><td class="num">5%</td><td>Renderer, cameras, input, HUD, persistence, frame loop</td></tr>
+    <tr><td><code>build.mjs</code></td><td class="num">54</td><td class="num">—</td><td class="num">—</td><td>Single-file bundler</td></tr>
+    <tr><td><code>tools/</code></td><td class="num">~350</td><td class="num">—</td><td class="num">—</td><td>Headless verification harness</td></tr>
+    <tr><td><strong>Total</strong></td><td class="num"><strong>7,890</strong></td><td class="num"><strong>191</strong></td><td class="num"></td><td></td></tr>
+  </table>
+
+  <pre class="light">tiny_world/
+├── index.html              <span class="c">← play this</span>
+├── README.md   REPORT.md   build.mjs
+├── vendor/three.min.js     <span class="c">r160 UMD, vendored unmodified</span>
+├── src/                    <span class="c">the 11 modules above</span>
+├── tools/                  <span class="c">smoke · metrics · playthrough</span>
+├── docs/                   <span class="c">this report + make-pdf.mjs</span>
+└── dist/tiny-world.html    <span class="c">generated — 997 KB, self-contained</span></pre>
+
+  <h3>Constants worth knowing</h3>
+  <div class="grid2">
+    <table class="compact">
+      <tr><th>Constant</th><th>Value</th></tr>
+      <tr><td>Planet radius</td><td>14</td></tr>
+      <tr><td>Sea level</td><td>14.025</td></tr>
+      <tr><td>Terrain detail</td><td>40</td></tr>
+      <tr><td>Scatter points</td><td>1,650</td></tr>
+      <tr><td>Walk / run / swim</td><td>2.6 / 4.7 / 2.9 m·s⁻¹</td></tr>
+    </table>
+    <table class="compact">
+      <tr><th>Constant</th><th>Value</th></tr>
+      <tr><td>Jump / gravity</td><td>5.6 / 15</td></tr>
+      <tr><td>Body / plan clearance</td><td>0.26 / 0.39 m</td></tr>
+      <tr><td>Nav graph detail</td><td>21 → 4,842 nodes</td></tr>
+      <tr><td>Day length</td><td>420 s</td></tr>
+      <tr><td>Save key</td><td><code>tiny-world-save-v1</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ======================= 15 & 16 ======================= -->
+<section class="divider">
+  <span class="num">15</span>
+  <span class="eyebrow">Section Fifteen &amp; Sixteen</span>
+  <h2>Studying and extending the project</h2>
+  <p>A reading order that builds understanding, and the rules for adding to it.</p>
+</section>
+
+<section class="sheet">
+  <h3>15. How to study this project</h3>
+
+  <h4>Session 1 — the idea &nbsp;<span class="note">1 hour</span></h4>
+  <ol>
+    <li><strong>Play it.</strong> Find all eight wonders. Press <strong>N</strong> at Lalbagh Hollow.</li>
+    <li>Read <code>src/00-core.js</code> top to bottom. It is the smallest file and everything else is built from it.</li>
+    <li>In the browser console: <code>TW.core.bake.totalMerged</code> → 6348, <code>TW.core.bake.totalBatches</code> → 213.</li>
+  </ol>
+
+  <h4>Session 2 — how a world gets made &nbsp;<span class="note">2 hours</span></h4>
+  <ol start="4">
+    <li>Read <code>TW.nature.pine</code> and <code>TW.props.cottage</code>. They are <em>just functions returning groups</em>.</li>
+    <li>Read <code>ctx</code> in <code>src/30-planet.js</code> — the boundary between engine and content.</li>
+    <li>Read one region builder in <code>src/40-biomes-a.js</code>. It reads like a planting list.</li>
+    <li>Change a colour, save, reload. That loop is the whole point of the no-bundler decision.</li>
+  </ol>
+
+  <h4>Session 3 — the mathematics &nbsp;<span class="note">2 hours</span></h4>
+  <ol start="8">
+    <li>Read <code>src/50-walker.js</code>. Take <code>arcIsClear()</code> slowly — write out <code>f(t) = R·cos(t − φ)</code> on paper.</li>
+    <li>Plan a route from the console and inspect the waypoints.</li>
+    <li>Read <code>solveTimeFor()</code> in <code>src/80-render.js</code> — the same trick applied to sunlight.</li>
+  </ol>
+
+  <h4>Session 4 — presentation &nbsp;<span class="note">2 hours</span></h4>
+  <ol start="11">
+    <li>Read <code>createExplorer()</code>. Set <code>moveBlend</code> by hand and watch the pose change.</li>
+    <li>Read <code>createPost()</code> and follow one pixel through the chain.</li>
+    <li>Read <code>frame()</code> in <code>src/90-app.js</code> — the whole game in one function.</li>
+  </ol>
+
+  <h4>Live experiments</h4>
+  <pre>TW.app.lighting.<span class="k">setPhase</span>(<span class="s">'night'</span>);       <span class="c">// hold the sky</span>
+TW.app.walker.walkSpeed = 8;             <span class="c">// sprint</span>
+TW.app.post.bloomEnabled = <span class="k">false</span>;        <span class="c">// A/B the bloom</span>
+TW.app.<span class="k">travelTo</span>(TW.planet.<span class="k">normalAt</span>(<span class="s">'cinderpeak'</span>, 0, 3));
+TW.app.scene.<span class="k">traverse</span>(o =&gt; { <span class="k">if</span> (o.isMesh) o.material.wireframe = <span class="k">true</span>; });</pre>
+  <p class="note">Internal IDs remain the original development names —
+  <code>mosswood</code>, <code>cinderpeak</code> — because they are the keys existing
+  save files were written with. Only the display names changed.</p>
+
+  <h3 class="pb">16. Extending the game</h3>
+
+  <h4>Add a prop</h4>
+  <pre><span class="c">// in src/20-props.js</span>
+P.watchtower = <span class="k">function</span> (parent, x, z, height) {
+  <span class="k">var</span> g = C.<span class="k">group</span>(parent, x, 0, z);
+  <span class="k">for</span> (<span class="k">var</span> s = -1; s &lt;= 1; s += 2)
+    <span class="k">for</span> (<span class="k">var</span> t = -1; t &lt;= 1; t += 2)
+      C.<span class="k">link</span>(g, [s*0.4, 0, t*0.4], [s*0.22, height, t*0.22], 0.05, PAL.wood);
+  C.<span class="k">box</span>(g, 0, height, 0, 0.7, 0.06, 0.7, PAL.wood);
+  P.<span class="k">gableRoof</span>(g, 0.8, 0.8, height + 0.5, height + 0.9, PAL.roofRed);
+  <span class="k">return</span> g;
+};</pre>
+  <p>It bakes automatically. Use it with
+  <code>ctx.place('mosswood', 2, -1, g =&gt; P.watchtower(g, 0, 0, 1.8))</code>.</p>
+
+  <h4>Add a region</h4>
+  <ol>
+    <li>Append an entry to <code>BIOMES</code> in <code>src/30-planet.js</code> — pick a lat/lon well clear of the others.</li>
+    <li>Add region-specific shaping in <code>regionElevation()</code> if wanted.</li>
+    <li>Push a builder onto <code>B.list</code> in a biome file.</li>
+    <li>Add a footstep profile to <code>GROUND</code> in <code>src/70-audio.js</code>.</li>
+  </ol>
+
+  <h4>Rules to respect</h4>
+  <table class="compact zebra">
+    <tr><th style="width:62mm">Rule</th><th>Why</th></tr>
+    <tr><td>Never call <code>Math.random()</code> during generation</td><td>Use <code>ctx.rand()</code> — the world must be deterministic</td></tr>
+    <tr><td>Anything animated needs <code>C.dyn()</code> or <code>C.pivot()</code></td><td>Otherwise <code>bake()</code> will merge it and freeze it</td></tr>
+    <tr><td>Long props need multiple anchors, or <code>ctx.path()</code></td><td>One anchor over a slope hovers at the far end (bugs 5 and 6)</td></tr>
+    <tr><td>Register a collider for anything solid</td><td><code>ctx.block(id, x, z, radius)</code></td></tr>
+    <tr><td>Run <code>node build.mjs</code> after editing</td><td>Otherwise <code>dist/</code> goes stale</td></tr>
+  </table>
+</section>
+
+<!-- ======================= 17 ======================= -->
+<section class="divider">
+  <span class="num">17</span>
+  <span class="eyebrow">Appendix</span>
+  <h2>Full API surface</h2>
+  <p>Everything each module exposes.</p>
+</section>
+
+<section class="sheet">
+  <h4>TW.core &nbsp;<span class="note">33 exports</span></h4>
+  <div class="chip-row"><span class="chip">TAU</span><span class="chip">DEG</span><span class="chip">clamp</span><span class="chip">lerp</span><span class="chip">smoothstep</span><span class="chip">damp</span><span class="chip">rand</span><span class="chip">reseed</span><span class="chip">makeRandom</span><span class="chip">mat</span><span class="chip">dyn</span><span class="chip">tickAll</span><span class="chip">tickers</span><span class="chip">group</span><span class="chip">pivot</span><span class="chip">mesh</span><span class="chip">box</span><span class="chip">rock</span><span class="chip">cone</span><span class="chip">tube</span><span class="chip">torus</span><span class="chip">sphere</span><span class="chip">link</span><span class="chip">beam</span><span class="chip">poly</span><span class="chip">slab</span><span class="chip">ribbon</span><span class="chip">mergeGeometries</span><span class="chip">bake</span><span class="chip">countTriangles</span><span class="chip">UNIT_BOX</span><span class="chip">UNIT_ICO0</span><span class="chip">UNIT_ICO1</span></div>
+
+  <h4>TW.nature &nbsp;<span class="note">23 exports</span></h4>
+  <div class="chip-row"><span class="chip">pine</span><span class="chip">broadleaf</span><span class="chip">birch</span><span class="chip">palm</span><span class="chip">snag</span><span class="chip">mushroom</span><span class="chip">grass</span><span class="chip">flower</span><span class="chip">bush</span><span class="chip">berryBush</span><span class="chip">reeds</span><span class="chip">boulders</span><span class="chip">crystals</span><span class="chip">signpost</span><span class="chip">pond</span><span class="chip">waterfall</span><span class="chip">flames</span><span class="chip">smoke</span><span class="chip">motes</span><span class="chip">bird</span><span class="chip">fish</span><span class="chip">butterfly</span><span class="chip">critter</span></div>
+
+  <h4>TW.props &nbsp;<span class="note">26 exports</span></h4>
+  <div class="chip-row"><span class="chip">gableRoof</span><span class="chip">window</span><span class="chip">door</span><span class="chip">cottage</span><span class="chip">tent</span><span class="chip">fence</span><span class="chip">lamppost</span><span class="chip">stringLights</span><span class="chip">crate</span><span class="chip">barrel</span><span class="chip">basket</span><span class="chip">sack</span><span class="chip">bench</span><span class="chip">woodpile</span><span class="chip">sailboat</span><span class="chip">jetty</span><span class="chip">ropeBridge</span><span class="chip">windmill</span><span class="chip">pump</span><span class="chip">cart</span><span class="chip">telescope</span><span class="chip">mast</span><span class="chip">campfire</span><span class="chip">bell</span><span class="chip">well</span><span class="chip">steppingStones</span></div>
+
+  <h4>TW.planet &nbsp;<span class="note">15 exports</span></h4>
+  <div class="chip-row"><span class="chip">RADIUS</span><span class="chip">SEA</span><span class="chip">UP</span><span class="chip">BIOMES</span><span class="chip">BY_ID</span><span class="chip">latLon</span><span class="chip">normalAt</span><span class="chip">localAt</span><span class="chip">biomeAt</span><span class="chip">classify</span><span class="chip">terrainRadius</span><span class="chip">surfaceRadius</span><span class="chip">isWater</span><span class="chip">build</span><span class="chip">buildSky</span></div>
+
+  <h4>TW.walk &nbsp;<span class="note">10 exports</span></h4>
+  <div class="chip-row"><span class="chip">Walker</span><span class="chip">arcLength</span><span class="chip">tangent</span><span class="chip">advance</span><span class="chip">resolve</span><span class="chip">arcIsClear</span><span class="chip">buildCaps</span><span class="chip">findRoute</span><span class="chip">BODY_CLEARANCE</span><span class="chip">PLAN_CLEARANCE</span></div>
+
+  <h4>TW.explorer &nbsp;·&nbsp; TW.render &nbsp;·&nbsp; TW.audio &nbsp;·&nbsp; TW.biomes</h4>
+  <div class="chip-row"><span class="chip">SKIN</span><span class="chip">create</span><span class="chip">createWaypointMarker</span><span class="chip">createCompanion</span>
+  &nbsp;&nbsp;<span class="chip">createPost</span><span class="chip">createLighting</span><span class="chip">createSunAndMoon</span><span class="chip">installOcclusion</span><span class="chip">DAY_LENGTH</span><span class="chip">PHASE_ORDER</span>
+  &nbsp;&nbsp;<span class="chip">create</span><span class="chip">NOTES</span><span class="chip">GROUND</span>
+  &nbsp;&nbsp;<span class="chip">list</span><span class="chip">buildAll</span></div>
+
+  <h4>TW.app &nbsp;<span class="note">debug and test surface</span></h4>
+  <div class="chip-row"><span class="chip">renderer</span><span class="chip">scene</span><span class="chip">camera</span><span class="chip">post</span><span class="chip">lighting</span><span class="chip">world</span><span class="chip">walker</span><span class="chip">explorer</span><span class="chip">companion</span><span class="chip">audio</span><span class="chip">travelTo</span><span class="chip">interact</span><span class="chip">setView</span><span class="chip">goHome</span><span class="chip">save</span><span class="chip">view</span><span class="chip">found</span><span class="chip">collected</span></div>
+
+  <div style="margin-top:14mm;padding-top:5mm;border-top:.6pt solid var(--rule);
+              font-size:8.6pt;color:var(--muted);text-align:center;">
+    All figures in this report were measured from the running build via
+    <code>node tools/metrics.mjs</code> and <code>node tools/playthrough.mjs</code>.<br>
+    Regenerate this document with <code>node tools/make-pdf.mjs</code>.
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "a-world-in-your-palm-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Headless verification harness. Not needed to play the game.",
+  "scripts": {
+    "smoke": "node smoke.mjs",
+    "play": "node playthrough.mjs",
+    "metrics": "node metrics.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^23.0.0"
+  }
+}

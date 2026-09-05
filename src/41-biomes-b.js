@@ -1,6 +1,6 @@
 /* =============================================================================
  * A World in Your Palm — 41-biomes-b.js
- * Pearl Reef, Barren Peak, Snow Valley, Firefly Hollow.
+ * Sankey Deep, Savandurga Peak, Nandi Frost, Lalbagh Hollow.
  * The stranger half of the planet: one region is entirely underwater, one is
  * a live volcano, one is polar, and one only makes sense in the dark.
  * ============================================================================= */
@@ -404,7 +404,7 @@
       g.userData.activate = function () {
         reading = !reading;
         return reading
-          ? 'The instruments come alive. Barren Peak grumbles, pleased to be noticed.'
+          ? 'The instruments come alive. Savandurga grumbles, pleased to be noticed.'
           : 'The readings settle. The mountain goes back to dozing.';
       };
     }, { heading: 0.4 });
@@ -838,7 +838,7 @@
         swarm.visible = awake;
         return awake
           ? 'Every jar opens at once. The hollow fills with slow green light.'
-          : 'The lights wind down, one jar at a time. Goodnight, Firefly Hollow.';
+          : 'The lights wind down, one jar at a time. Goodnight, Lalbagh.';
       };
     });
     ctx.block(id, -0.4, 1.9, 1.0);

@@ -1,0 +1,11 @@
+# Dependencies for the optional test harness — not needed to play or build.
+tools/node_modules/
+
+# Scratch output from the verification and preview scripts.
+.preview/
+.preview-pdf/
+.shots/
+
+# OS and editor noise
+Thumbs.db
+.DS_Store

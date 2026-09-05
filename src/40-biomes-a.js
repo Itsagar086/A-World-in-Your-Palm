@@ -1,6 +1,6 @@
 /* =============================================================================
  * A World in Your Palm — 40-biomes-a.js
- * Banyan Hollow, Marigold Fields, Saffron Dunes, Coconut Cove.
+ * Cubbon Woods, Hesaraghatta Fields, Ramanagara Dunes, Ulsoor Bay.
  *
  * Each builder receives the planet's authoring context and plants its region in
  * flat local metres. `ctx.place(id, x, z, build)` handles the sphere; the
@@ -144,7 +144,7 @@
         if (treeLights) treeLights.userData.setLit(lit);
         return lit
           ? 'The camp is awake. Lanterns, firelight, and a hundred little wings.'
-          : 'The fire settles to embers. Banyan Hollow breathes out.';
+          : 'The fire settles to embers. Cubbon Woods breathes out.';
       };
       g.userData.flames = fire;
     });

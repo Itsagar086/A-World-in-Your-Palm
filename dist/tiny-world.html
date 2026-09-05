@@ -278,7 +278,7 @@ body.photo-mode .photo-frame{opacity:1}
 
   <div id="region" class="region">
     <span class="eyebrow" id="region-kind">FOREST · 01</span>
-    <h1 id="region-name">Banyan Hollow</h1>
+    <h1 id="region-name">Cubbon Woods</h1>
     <p id="region-caption">Every long journey starts with one small step off the path.</p>
   </div>
 
@@ -293,7 +293,7 @@ body.photo-mode .photo-frame{opacity:1}
   <div id="compass" class="compass" hidden aria-hidden="true">
     <div class="compass-copy">
       <small>NEAREST WONDER</small>
-      <strong id="compass-name">Banyan Hollow</strong>
+      <strong id="compass-name">Cubbon Woods</strong>
       <span id="compass-distance">0m</span>
     </div>
     <div class="compass-dial"><span id="compass-needle"></span></div>
@@ -334,7 +334,7 @@ body.photo-mode .photo-frame{opacity:1}
   <div id="joystick" class="joystick" aria-label="Movement joystick"><span class="joystick-cross"></span><span id="joystick-knob"></span></div>
   <button id="jump-button" class="jump-button" aria-label="Jump"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 11 5-6 5 6M12 5v13M5 20h14"/></svg></button>
 
-  <div id="controls-description" class="sr-only">WASD or arrow keys to walk. Shift to run. Space to hop. E to interact with a nearby landmark. Click or tap the ground to walk there. Drag to rotate the camera. Scroll or pinch to zoom. M toggles globe and follow views. N changes the time of day. P enters photo mode. J opens your field journal. Home returns to Banyan Hollow. Escape cancels your route. On touch screens, use the movement joystick and jump button.</div>
+  <div id="controls-description" class="sr-only">WASD or arrow keys to walk. Shift to run. Space to hop. E to interact with a nearby landmark. Click or tap the ground to walk there. Drag to rotate the camera. Scroll or pinch to zoom. M toggles globe and follow views. N changes the time of day. P enters photo mode. J opens your field journal. Home returns to Cubbon Woods. Escape cancels your route. On touch screens, use the movement joystick and jump button.</div>
   <output id="telemetry" class="sr-only" aria-hidden="true"></output>
 
   <div id="fallback" class="fallback" hidden><p>This little world needs WebGL 2.<span>Please use a current browser with graphics acceleration, then reload.</span></p></div>
@@ -813,7 +813,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
   /* --- trees --------------------------------------------------------------- */
 
-  /** Layered conifer. The staple of Banyan Hollow and the cold biomes. */
+  /** Layered conifer. The staple of Cubbon Woods and the cold biomes. */
   N.pine = function (parent, x, z, height, color, rotY) {
     height = height === undefined ? 1.5 : height;
     color = color || '#2c8055';
@@ -1973,42 +1973,42 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 
   var BIOMES = [
     {
-      id: 'mosswood', name: 'Banyan Hollow', kind: 'Forest',
+      id: 'mosswood', name: 'Cubbon Woods', kind: 'Forest',
       tagline: 'Every long journey starts with one small step off the path.',
       color: '#4e9159', accent: '#a7d886', lat: 18, lon: -6, elevation: 0.25,
     },
     {
-      id: 'honeyfield', name: 'Marigold Fields', kind: 'Meadow',
+      id: 'honeyfield', name: 'Hesaraghatta Fields', kind: 'Meadow',
       tagline: 'A little care, and the whole hillside answers.',
       color: '#93aa5f', accent: '#f0d27a', lat: 30, lon: -74, elevation: 0.23,
     },
     {
-      id: 'amberdunes', name: 'Saffron Dunes', kind: 'Desert',
+      id: 'amberdunes', name: 'Ramanagara Dunes', kind: 'Desert',
       tagline: 'Every dune is hiding something green.',
       color: '#e3b76a', accent: '#f2cb8a', lat: 24, lon: 68, elevation: 0.26,
     },
     {
-      id: 'driftbay', name: 'Coconut Cove', kind: 'Coast',
+      id: 'driftbay', name: 'Ulsoor Bay', kind: 'Coast',
       tagline: 'Leave nothing but very small footprints.',
       color: '#e7cf97', accent: '#f5ab86', lat: -24, lon: 62, elevation: 0.13,
     },
     {
-      id: 'coralhollow', name: 'Pearl Reef', kind: 'Reef',
+      id: 'coralhollow', name: 'Sankey Deep', kind: 'Reef',
       tagline: 'There is a whole other world under the blue.',
       color: '#5f8f8b', accent: '#7ad9d4', lat: -42, lon: -26, elevation: -0.68,
     },
     {
-      id: 'cinderpeak', name: 'Barren Peak', kind: 'Volcano',
+      id: 'cinderpeak', name: 'Savandurga Peak', kind: 'Volcano',
       tagline: 'Even a sleeping mountain likes to be asked how it is.',
       color: '#6b564c', accent: '#f59a68', lat: 2, lon: -152, elevation: 0.33,
     },
     {
-      id: 'frostveil', name: 'Snow Valley', kind: 'Tundra',
+      id: 'frostveil', name: 'Nandi Frost', kind: 'Tundra',
       tagline: 'The quietest places keep the brightest secrets.',
       color: '#d9ece3', accent: '#b3ddef', lat: 66, lon: 156, elevation: 0.31,
     },
     {
-      id: 'glowgrove', name: 'Firefly Hollow', kind: 'Hollow',
+      id: 'glowgrove', name: 'Lalbagh Hollow', kind: 'Hollow',
       tagline: 'Some things only show themselves after dark.',
       color: '#3f5c72', accent: '#9fe0c8', lat: -30, lon: 150, elevation: 0.28,
     },
@@ -2708,7 +2708,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 <script>/* src/40-biomes-a.js */
 /* =============================================================================
  * A World in Your Palm — 40-biomes-a.js
- * Banyan Hollow, Marigold Fields, Saffron Dunes, Coconut Cove.
+ * Cubbon Woods, Hesaraghatta Fields, Ramanagara Dunes, Ulsoor Bay.
  *
  * Each builder receives the planet's authoring context and plants its region in
  * flat local metres. `ctx.place(id, x, z, build)` handles the sphere; the
@@ -2852,7 +2852,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
         if (treeLights) treeLights.userData.setLit(lit);
         return lit
           ? 'The camp is awake. Lanterns, firelight, and a hundred little wings.'
-          : 'The fire settles to embers. Banyan Hollow breathes out.';
+          : 'The fire settles to embers. Cubbon Woods breathes out.';
       };
       g.userData.flames = fire;
     });
@@ -3523,7 +3523,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
 <script>/* src/41-biomes-b.js */
 /* =============================================================================
  * A World in Your Palm — 41-biomes-b.js
- * Pearl Reef, Barren Peak, Snow Valley, Firefly Hollow.
+ * Sankey Deep, Savandurga Peak, Nandi Frost, Lalbagh Hollow.
  * The stranger half of the planet: one region is entirely underwater, one is
  * a live volcano, one is polar, and one only makes sense in the dark.
  * ============================================================================= */
@@ -3927,7 +3927,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
       g.userData.activate = function () {
         reading = !reading;
         return reading
-          ? 'The instruments come alive. Barren Peak grumbles, pleased to be noticed.'
+          ? 'The instruments come alive. Savandurga grumbles, pleased to be noticed.'
           : 'The readings settle. The mountain goes back to dozing.';
       };
     }, { heading: 0.4 });
@@ -4361,7 +4361,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
         swarm.visible = awake;
         return awake
           ? 'Every jar opens at once. The hollow fills with slow green light.'
-          : 'The lights wind down, one jar at a time. Goodnight, Firefly Hollow.';
+          : 'The lights wind down, one jar at a time. Goodnight, Lalbagh.';
       };
     });
     ctx.block(id, -0.4, 1.9, 1.0);
@@ -6739,7 +6739,7 @@ function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"f
   waypoint.visible = false;
   scene.add(waypoint);
 
-  /* Open on a bright mid-morning over Banyan Hollow, wherever that happens to fall
+  /* Open on a bright mid-morning over Cubbon Woods, wherever that happens to fall
    * on the sun's orbit, and build the navigation graph now rather than on the
    * player's first click — it is a ~100 ms job and it should not land mid-walk. */
   lighting.startAt(spawn, 0.66);

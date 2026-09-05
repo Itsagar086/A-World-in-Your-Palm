@@ -88,7 +88,7 @@
   waypoint.visible = false;
   scene.add(waypoint);
 
-  /* Open on a bright mid-morning over Banyan Hollow, wherever that happens to fall
+  /* Open on a bright mid-morning over Cubbon Woods, wherever that happens to fall
    * on the sun's orbit, and build the navigation graph now rather than on the
    * player's first click — it is a ~100 ms job and it should not land mid-walk. */
   lighting.startAt(spawn, 0.66);

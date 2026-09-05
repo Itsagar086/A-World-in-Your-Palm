@@ -19,7 +19,7 @@
 
   /* --- trees --------------------------------------------------------------- */
 
-  /** Layered conifer. The staple of Banyan Hollow and the cold biomes. */
+  /** Layered conifer. The staple of Cubbon Woods and the cold biomes. */
   N.pine = function (parent, x, z, height, color, rotY) {
     height = height === undefined ? 1.5 : height;
     color = color || '#2c8055';

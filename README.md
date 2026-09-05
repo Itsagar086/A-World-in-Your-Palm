@@ -17,14 +17,14 @@ self-contained file (Three.js inlined) that works offline from a USB stick.
 
 | # | Region | Wonder | What happens |
 |---|--------|--------|--------------|
-| 01 | **Banyan Hollow** — forest | Light the camp | Lanterns, campfire and fireflies come on across the whole clearing |
-| 02 | **Marigold Fields** — meadow | Start the windmill | The sails turn, the bees come out, the flowerbeds open |
-| 03 | **Saffron Dunes** — desert | Turn the dial | A hidden spring wells up and an oasis grows out of the sand |
-| 04 | **Coconut Cove** — coast | Ring the bell | The little sailboat casts off and sails a circuit of the cove |
-| 05 | **Pearl Reef** — reef | Wake the reef | Every coral in the region lights up and the fish come to look |
-| 06 | **Barren Peak** — volcano | Read the instruments | The mountain answers: the lava brightens and the crater stirs |
-| 07 | **Snow Valley** — tundra | Ring the chime | An aurora unrolls across the polar sky |
-| 08 | **Firefly Hollow** — hollow | Open the jars | Giant fungus and crystal light the bowl in slow green |
+| 01 | **Cubbon Woods** — forest | Light the camp | Lanterns, campfire and fireflies come on across the whole clearing |
+| 02 | **Hesaraghatta Fields** — meadow | Start the windmill | The sails turn, the bees come out, the flowerbeds open |
+| 03 | **Ramanagara Dunes** — desert | Turn the dial | A hidden spring wells up and an oasis grows out of the sand |
+| 04 | **Ulsoor Bay** — coast | Ring the bell | The little sailboat casts off and sails a circuit of the cove |
+| 05 | **Sankey Deep** — reef | Wake the reef | Every coral in the region lights up and the fish come to look |
+| 06 | **Savandurga Peak** — volcano | Read the instruments | The mountain answers: the lava brightens and the crater stirs |
+| 07 | **Nandi Frost** — tundra | Ring the chime | An aurora unrolls across the polar sky |
+| 08 | **Lalbagh Hollow** — hollow | Open the jars | Giant fungus and crystal light the bowl in slow green |
 
 Plus **sixteen wisps** scattered across the planet to find, a companion creature
 that follows you around, and a field journal that remembers everything.
@@ -64,14 +64,17 @@ On a touch screen you get a joystick and a jump button instead.
 
 ```
 index.html          the page, the interface, and all the CSS
+REPORT.md           full project report
+docs/               the report, typeset as a PDF, + make-pdf.mjs
+tools/              headless verification harness
 vendor/             three.min.js (r160, UMD build)
 src/
   00-core.js        the primitive kit and the geometry baker
   10-nature.js      trees, plants, rocks, water, fire, animals
   20-props.js       shelters, fences, lanterns, boats, bridges, machinery
   30-planet.js      terrain generation, regions, placement, sky
-  40-biomes-a.js    Banyan Hollow, Marigold Fields, Saffron Dunes, Coconut Cove
-  41-biomes-b.js    Pearl Reef, Barren Peak, Snow Valley, Firefly Hollow
+  40-biomes-a.js    Cubbon Woods, Hesaraghatta Fields, Ramanagara Dunes, Ulsoor Bay
+  41-biomes-b.js    Sankey Deep, Savandurga Peak, Nandi Frost, Lalbagh Hollow
   50-walker.js      walking on a sphere, collision, A* navigation
   60-explorer.js    the character rig, the companion, the waypoint marker
   70-audio.js       the synthesiser
@@ -80,9 +83,22 @@ src/
 build.mjs           inlines everything into dist/tiny-world.html
 ```
 
-`node build.mjs` regenerates the single-file build. There is no other tooling,
-no package.json, and no install step — the source files are plain scripts that
-the browser loads directly, so you can edit one and hit reload.
+`node build.mjs` regenerates the single-file build. The source files are plain
+scripts the browser loads directly, so you can edit one and hit reload.
+
+**Further reading.** [`REPORT.md`](REPORT.md) is the full project report —
+planning, architecture, call graphs, every command, testing, performance and a
+study guide. The same document is typeset as
+[`docs/A-World-in-Your-Palm-Report.pdf`](docs/A-World-in-Your-Palm-Report.pdf).
+
+**Verification.** `tools/` holds a headless test harness:
+
+```
+cd tools && npm install && cd ..
+node tools/smoke.mjs          # loads and renders?
+node tools/metrics.mjs        # measure the world
+node tools/playthrough.mjs    # full acceptance run
+```
 
 ### The four ideas the whole thing rests on
 
